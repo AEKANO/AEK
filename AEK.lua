@@ -1285,29 +1285,29 @@ end,nil);
 end 
 end 
 --     Source AEK     --
-if text and DevAek:get(AEK..'Aek:Start:Bots') then
+if text and DevAek:get(AEK..'Start:Bots') then
 if text == 'الغاء' then   
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم الغاء حفظ كليشة الستارت', 1, 'md')
-DevAek:del(AEK..'Aek:Start:Bots') 
+DevAek:del(AEK..'Start:Bots') 
 return false
 end
-DevAek:set(AEK.."Aek:Start:Bot",text)  
+DevAek:set(AEK.."Start:Bot",text)  
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم حفظ كليشة الستارت', 1, 'md')
-DevAek:del(AEK..'Aek:Start:Bots') 
+DevAek:del(AEK..'Start:Bots') 
 return false
 end
-if Sudo(msg) then
-if text == 'تعيين رد الخاص' or text == 'ضع كليشه ستارت' or text == '↫ تعيين رد الخاص ❦' then 
-DevAek:set(AEK..'Aek:Start:Bots',true) 
+--     Source AEK     --
+if text == 'تعيين رد الخاص' and Sudo(msg) or text == 'ضع كليشه ستارت' and Sudo(msg) or text == '↫ تعيين رد الخاص ❦' and Sudo(msg) then 
+DevAek:set(AEK..'Start:Bots',true) 
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ ارسل لي كليشة الستارت الان', 1, 'md')
 return false
 end
-if text == 'حذف رد الخاص' or text == 'حذف كليشه ستارت' or text == '↫ حذف رد الخاص ❦' then 
+if text == 'حذف رد الخاص' and Sudo(msg) or text == 'حذف كليشه ستارت' and Sudo(msg) or text == '↫ حذف رد الخاص ❦' and Sudo(msg) then 
 DevAek:del(AEK..'Start:Bot') 
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم حذف كليشة الستارت بنجاح', 1, 'md')
 end
-if text == 'جلب رد الخاص' then  
-local start = DevAek:get(AEK.."Aek:Start:Bot")
+if text == 'جلب رد الخاص' and Sudo(msg) then  
+local start = DevAek:get(AEK.."Start:Bot")
 if start then 
 Start_Source = start
 else
@@ -1316,6 +1316,8 @@ end
 Dev_Aek(msg.chat_id_, msg.id_, 1, Start_Source, 1, 'md')
 return false
 end
+--     Source AEK     --
+if Sudo(msg) then
 if text == 'تفعيل التواصل' or text == '↫ تفعيل التواصل ❦' then   
 local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تفعيل التواصل بنجاح'
 Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
@@ -3757,6 +3759,12 @@ Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم اذاعة رسالتك بالت
 end
 getMessage(msg.chat_id_, tonumber(msg.reply_to_message_id_),AEKTEAM)
 end
+end
+--     Source AEK     --
+if text:match('^الحساب (%d+)$') then
+local id = text:match('^الحساب (%d+)$')
+local text = 'اضغط لمشاهدة العضو ⁞ ❦'
+tdcli_function ({ID="SendMessage", chat_id_=msg.chat_id_, reply_to_message_id_=msg.id_, disable_notification_=0, from_background_=1, reply_markup_=nil, input_message_content_={ID="InputMessageText", text_=text, disable_web_page_preview_=1, clear_draft_=0, entities_={[0] = {ID="MessageEntityMentionName", offset_=0, length_=19, user_id_=id}}}}, dl_cb, nil)
 end
 --     Source AEK     --
 if text:match("^مشاهده المنشور$") and ChCheck(msg) or text:match("^مشاهدات المنشور$") and ChCheck(msg) or text:match("^عدد المشاهدات$") and ChCheck(msg) then
@@ -6201,8 +6209,8 @@ local List = {
 ]],
 [[
 ┌ 𝐔𝐒𝐄𝐑 𖤱 #username 𖦴 .
-├ 𝐌𝐒𝐆 𖤱 #msgs 𖦴 .
-├ ????𝐀 𖤱 #stast 𖦴 .
+├ 𝐌??𝐆 𖤱 #msgs 𖦴 .
+├ ????𝐀 ?? #stast 𖦴 .
 └ 𝐈𝐃 𖤱 #id 𖦴 .
 ]],
 [[
