@@ -1970,12 +1970,10 @@ end
 --     Source AEK     --
 --       Spam Send        --
 function NotSpam(msg,Type)
+tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,dp) 
+local GetName = '['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..')'
 if Type == "kick" then 
 ChatKick(msg.chat_id_,msg.sender_user_id_) 
-tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,dp) 
-Text = '❦ ⁞ العضو ↫ ['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..') \n❦ ⁞ قام بالتكرار المحدد تم طرده '
-SendText(msg.chat_id_,Text,0,'md')
-end,nil)
 my_ide = msg.sender_user_id_
 msgm = msg.id_
 local num = 100
@@ -1987,34 +1985,17 @@ DeleteMessage(msg.chat_id_, {[0] = data.messages_[0].id_})
 end;end;end, nil)
 msgm = msgm - 1048576
 end
+Text = '❦ ⁞ العضو ↫ '..GetName..' \n❦ ⁞ قام بالتكرار المحدد تم طرده '
+SendText(msg.chat_id_,Text,0,'md')
 return false  
 end 
 if Type == "del" then 
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})   
-tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,dp) 
-Text = '❦ ⁞ العضو ↫ ['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..') \n❦ ⁞ قام بالتكرار تم حذف رسائله '
-SendText(msg.chat_id_,Text,0,'md')
-end,nil) 
-my_ide = msg.sender_user_id_
-msgm = msg.id_
-local num = 100
-for i=1,tonumber(num) do
-tdcli_function ({ID = "GetMessages",chat_id_ = msg.chat_id_,message_ids_ = {[0] = msgm}},function(arg,data) 
-if data.messages_[0] ~= false then
-if tonumber(my_ide) == (data.messages_[0].sender_user_id_) then
-DeleteMessage(msg.chat_id_, {[0] = data.messages_[0].id_})
-end;end;end, nil)
-msgm = msgm - 1048576
-end
 return false  
 end 
-if Type == "keed" then
+if Type == "keed" and not DevAek:sismember(AEK..'Aek:Tkeed:'..msg.chat_id_, msg.sender_user_id_) then
 https.request("https://api.telegram.org/bot" .. TokenBot .. "/restrictChatMember?chat_id=" ..msg.chat_id_.. "&user_id=" ..msg.sender_user_id_.."") 
 DevAek:sadd(AEK..'Aek:Tkeed:'..msg.chat_id_, msg.sender_user_id_)
-tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,dp) 
-Text = '❦ ⁞ العضو ↫ ['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..') \n❦ ⁞ قام بالتكرار المحدد تم تقييده '
-SendText(msg.chat_id_,Text,0,'md')
-end,nil)
 my_ide = msg.sender_user_id_
 msgm = msg.id_
 local num = 100
@@ -2026,14 +2007,12 @@ DeleteMessage(msg.chat_id_, {[0] = data.messages_[0].id_})
 end;end;end, nil)
 msgm = msgm - 1048576
 end
+Text = '❦ ⁞ العضو ↫ '..GetName..' \n❦ ⁞ قام بالتكرار المحدد تم تقيده '
+SendText(msg.chat_id_,Text,0,'md')
 return false  
 end  
-if Type == "mute" then
+if Type == "mute" and not DevAek:sismember(AEK..'Aek:Muted:'..msg.chat_id_, msg.sender_user_id_) then
 DevAek:sadd(AEK..'Aek:Muted:'..msg.chat_id_,msg.sender_user_id_)
-tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,dp) 
-Text = '❦ ⁞ العضو ↫ ['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..') \n❦ ⁞ قام بالتكرار المحدد تم كتمه '
-SendText(msg.chat_id_,Text,0,'md')
-end,nil)
 my_ide = msg.sender_user_id_
 msgm = msg.id_
 local num = 100
@@ -2045,8 +2024,11 @@ DeleteMessage(msg.chat_id_, {[0] = data.messages_[0].id_})
 end;end;end, nil)
 msgm = msgm - 1048576
 end
+Text = '❦ ⁞ العضو ↫ '..GetName..' \n❦ ⁞ قام بالتكرار المحدد تم كتمه '
+SendText(msg.chat_id_,Text,0,'md')
 return false  
 end
+end,nil)
 end  
 --  end functions AEK --
 --     Source AEK     --
@@ -3003,7 +2985,7 @@ if text ==  'حذف رسائلي' and ChCheck(msg) or text ==  'مسح رسائ�
 if text ==  'حذف نقاطي' and ChCheck(msg) or text ==  'مسح نقاطي' and ChCheck(msg) then DevAek:del(AEK..'Aek:GamesNumber'..msg.chat_id_..msg.sender_user_id_) Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم حذف جميع نقاطك', 1, 'md') end
 --     Source AEK     --
 if text == 'سمايلات' and ChCheck(msg) or text == 'السمايلات' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🍈','🍒','🍑','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥒','🌶','🌽','🥕','🥔','🍠','🥐','🍞','🥖','🥨','🧀','🥚','🍳','🥞','🥓','🥩','🍗','🍖','🌭','🍔','🍟','🍕','🥪','🥙','🍼','☕️','🍵','🥤','🍶','🍺','🍻','🏀','⚽️','🏈','⚾️','🎾','🏐','🏉','🎱','🏓','🏸','🥅','🎰','🎮','🎳','🎯','🏆','🎻','🎸','🎺','🥁','🎹','🎼','🎧','🎤','🎬','🎨','🎭','🎪','🛎','📤','🎗','🏵','🎖','🏆','🥌','🛷','🚕','🚗','🚙','🚌','🚎','🏎','🚓','🚑','🚚','🚛','🚜','🇮🇶','⚔️','🛡','🔮','🌡','💣','⏱','🛢','📓','📗','📂','📅','📪','📫','📬','📭','⏰','📺','🎚','☎️','📡'}
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum'..msg.chat_id_,name)
@@ -3137,7 +3119,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end
 if text == 'ترتيب' and ChCheck(msg) or text == 'الترتيب' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'سحور','سياره','استقبال','قنفه','ايفون','بزونه','مطبخ','كرستيانو','دجاجه','مدرسه','الوان','غرفه','ثلاجه','كهوه','سفينه','العراق','محطه','طياره','رادار','منزل','مستشفى','كهرباء','تفاحه','اخطبوط','سلمون','فرنسا','برتقاله','تفاح','مطرقه','بتيته','لهانه','شباك','باص','سمكه','ذباب','تلفاز','حاسوب','انترنيت','ساحه','جسر'};
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum'..msg.chat_id_,name)
@@ -3195,7 +3177,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end
 if text == 'محيبس' and ChCheck(msg) or text == 'بات' and ChCheck(msg) or text == 'المحيبس' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 Num = math.random(1,6)
 DevAek:set(AEK.."GAMES"..msg.chat_id_,Num) 
 TEST = [[
@@ -3211,7 +3193,7 @@ DevAek:setex(AEK.."SET:GAME"..msg.chat_id_, 100, true)
 return false  
 end end
 if text == 'حزوره' and ChCheck(msg) or text == 'الحزوره' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'الجرس','عقرب الساعه','السمك','المطر','5','الكتاب','البسمار','7','الكعبه','بيت الشعر','لهانه','انا','امي','الابره','الساعه','22','غلط','كم الساعه','البيتنجان','البيض','المرايه','الضوء','الهواء','الضل','العمر','القلم','المشط','الحفره','البحر','الثلج','الاسفنج','الصوت','بلم'};
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum'..msg.chat_id_,name)
@@ -3262,7 +3244,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end 
 if text == 'المعاني' and ChCheck(msg) or text == 'معاني' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'قرد','دجاجه','بطريق','ضفدع','بومه','نحله','ديك','جمل','بقره','دولفين','تمساح','قرش','نمر','اخطبوط','سمكه','خفاش','اسد','فأر','ذئب','فراشه','عقرب','زرافه','قنفذ','تفاحه','باذنجان'}
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum2'..msg.chat_id_,name)
@@ -3305,7 +3287,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end 
 if text == 'العكس' and ChCheck(msg) or text == 'عكس' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'باي','فهمت','موزين','اسمعك','احبك','موحلو','نضيف','حاره','ناصي','جوه','سريع','ونسه','طويل','سمين','ضعيف','شريف','شجاع','رحت','عدل','نشيط','شبعان','موعطشان','خوش ولد','اني','هادئ'}
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum3'..msg.chat_id_,name)
@@ -3348,7 +3330,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end 
 if text == 'المختلف' and ChCheck(msg) or text == 'مختلف' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'😸','☠','🐼','🐇','🌑','🌚','⭐️','📥','⛈','🌥','⛄️','👨‍🔬','👨‍💻','👨‍🔧','👩‍🍳','🧚‍♀','🧚‍♂️','🧝‍♂','🙍‍♂','🧖‍♂','👬','👨‍👨‍👧','🕓','🕤','⌛️','📅','👩‍⚖️','👨‍🎨'};
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum4'..msg.chat_id_,name)
@@ -3394,7 +3376,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end  
 if text == 'امثله' and ChCheck(msg) or text == 'الامثله' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {
 'جوز','ضراطه','الحبل','الحافي','شقره','بيدك','سلايه','النخله','الخيل','حداد','المبلل','يركص','قرد','العنب','العمه','الخبز','بالحصاد','شهر','شكه','يكحله',
 };
@@ -3435,7 +3417,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end  
 if text == 'رياضيات' and ChCheck(msg) or text == 'الرياضيات' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'9','46','2','9','5','4','25','10','17','15','39','5','16',};
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum6'..msg.chat_id_,name)
@@ -3467,7 +3449,7 @@ end
 DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end  
 if text == 'الانكليزي' and ChCheck(msg) or text == 'الانجليزيه' and ChCheck(msg) or text == 'انكليزيه' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'معلومات','قنوات','مجموعات','كتاب','تفاحه','سدني','نقود','اعلم','ذئب','تمساح','ذكي','شاطئ','غبي',};
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum7'..msg.chat_id_,name)
@@ -3499,7 +3481,7 @@ DevAek:set(AEK..'Aek:Games:Ids'..msg.chat_id_,true)
 end  
 --     Source AEK     --
 if text == 'اسئله' and ChCheck(msg) or text == 'اختيارات' and ChCheck(msg) or text == 'الاسئله' and ChCheck(msg) or text == 'اساله' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek2 = {'النيل','14','الفم','11','30','بوتين','ستيف جوبر','باريس','10','النمل','حرف الواو','الشعر','سحاب','الاسم','ذهب','حرف الام','العزائم','انسات','المنجنيق','اسيا','6','الاسد','مهر','الدولفين','اوروبا','الزئبق','لندن','الانسان','طوكيو','خديجه',}
 name = DevAek2[math.random(#DevAek2)]
 DevAek:set(AEK..'Aek:GameNum8'..msg.chat_id_,name)
@@ -3578,7 +3560,7 @@ end
 end
 end
 if text == 'خمن' and ChCheck(msg) or text == 'تخمين' and ChCheck(msg) then   
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 Num = math.random(1,20)
 DevAek:set(AEK.."GAMES:NUM"..msg.chat_id_,Num) 
 Dev_Aek(msg.chat_id_, msg.id_, 1,'❦ ⁞ اهلا بك عزيزي في لعبة التخمين ↫ ⤈\n ━───━ ❦ ━───━\n❦ ⁞ سيتم تخمين عدد ما بين الـ1 والـ20 اذا تعتقد انك تستطيع الفوز جرب واللعب الان .\n❦ ⁞ ملاحظه لديك ثلاث محاولات فقط فكر قبل ارسال تخمينك !', 1, 'md')
@@ -3588,7 +3570,7 @@ end
 end
 --     Source AEK     --
 if text == 'روليت' then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 DevAek:del(AEK.."Aek:NumRolet"..msg.chat_id_..msg.sender_user_id_) 
 DevAek:del(AEK..'Aek:ListRolet'..msg.chat_id_)  
 DevAek:setex(AEK.."Aek:StartRolet"..msg.chat_id_..msg.sender_user_id_,3600,true)  
@@ -3639,7 +3621,7 @@ end,nil)
 end
 --     Source AEK     --
 if text == 'الالعاب' and ChCheck(msg) or text == 'العاب' and ChCheck(msg) or text == 'اللعبه' and ChCheck(msg) then
-if DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
+if not DevAek:get(AEK..'Aek:Lock:Games'..msg.chat_id_) then
 Dev_Aek(msg.chat_id_, msg.id_, 1,[[
 ❦ ⁞ قائمة العاب المجموعه ↫ ⤈
 ━───━ ❦ ━───━
@@ -9178,7 +9160,6 @@ return false
 end
 end 
 --     Source AEK     --
-if Admin(msg) then
 if text and text == "تغيير اسم البوت" or text and text == "وضع اسم البوت" or text and text == "تغير اسم البوت" then
 if not SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ للمطور الاساسي فقط ', 1, 'md')
@@ -9197,14 +9178,14 @@ local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ ت
 Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
 end end 
 --     Source AEK     --
-if text and text:match("^استعاده الاوامر$") and Sudo(msg) or text and text:match("^استعادة كلايش الاوامر$") and Sudo(msg) then
+if text and text:match("^استعاده الاوامر$") and SecondSudo(msg) or text and text:match("^استعادة كلايش الاوامر$") and SecondSudo(msg) then
 HelpList ={'Aek:Help','Aek:Help1','Aek:Help2','Aek:Help3','Aek:Help4','Aek:Help5','Aek:Help6'}
 for i,Help in pairs(HelpList) do
 DevAek:del(AEK..Help) 
 end
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ تم استعادة الكلايش الاصليه" ,  1, "md") 
 end
-if text and text:match("^تعيين الاوامر$") and Sudo(msg) or text and text:match("^تعيين امر الاوامر$") and Sudo(msg) then
+if text == "تعيين الاوامر" and SecondSudo(msg) or text == "تعيين امر الاوامر" and SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ ارسل كليشة (الاوامر) الان " ,  1, "md")
 DevAek:set(AEK..'Aek:Help0'..msg.sender_user_id_, 'msg')
 return false end
@@ -9217,7 +9198,10 @@ DevAek:set(AEK..'Aek:Help', text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, text , 1, 'md')
 return false end
 end
-if text and text:match("^الاوامر$") or text and text:match("^اوامر$") or text and text:match("^مساعده$") then
+if text == "الاوامر" or text == "اوامر" or text == "مساعده" then
+if not Admin(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ هذا الامر يخص الرتب الاعلى فقط\n❦ ⁞ ارسل ↫ (م6) لعرض اوامر الاعضاء', 1, 'md')
+else
 local Help = DevAek:get(AEK..'Aek:Help')
 local text =  [[
 ❦ ⁞ اهلا بك في قائمة الاوامر ↫ ⤈ 
@@ -9233,7 +9217,8 @@ local text =  [[
 ]] 
 Dev_Aek(msg.chat_id_, msg.id_, 1, (Help or text), 1, 'md')
 end
-if text and text:match("^تعيين امر م1$") and Sudo(msg) or text and text:match("^تعيين امر م١$") and Sudo(msg) then
+end
+if text == "تعيين امر م1" and SecondSudo(msg) or text == "تعيين امر م١" and SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ ارسل كليشة (م1) الان " ,  1, "md")
 DevAek:set(AEK..'Aek:Help01'..msg.sender_user_id_, 'msg')
 return false end
@@ -9246,7 +9231,10 @@ DevAek:set(AEK..'Aek:Help1', text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, text , 1, 'md')
 return false end
 end
-if text and text:match("^م1$") or text and text:match("^م١$") or text and text:match("^اوامر1$") or text and text:match("^اوامر١$") then
+if text == "م1" or text == "م١" or text == "اوامر1" or text == "اوامر١" then
+if not Admin(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ هذا الامر يخص الرتب الاعلى فقط\n❦ ⁞ ارسل ↫ (م6) لعرض اوامر الاعضاء', 1, 'md')
+else
 local Help = DevAek:get(AEK..'Aek:Help1')
 local text =  [[
 ❦ ⁞ اوامر حماية المجموعه ↫ ⤈
@@ -9298,8 +9286,8 @@ local text =  [[
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
 ]]
 Dev_Aek(msg.chat_id_, msg.id_, 1, (Help or text), 1, 'md')
-end
-if text and text:match("^تعيين امر م2$") and Sudo(msg) or text and text:match("^تعيين امر م٢$") and Sudo(msg) then
+end end
+if text == "تعيين امر م2" and SecondSudo(msg) or text == "تعيين امر م٢" and SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ ارسل كليشة (م2) الان " ,  1, "md")
 DevAek:set(AEK..'Aek:Help21'..msg.sender_user_id_, 'msg')
 return false end
@@ -9312,7 +9300,10 @@ DevAek:set(AEK..'Aek:Help2', text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, text , 1, 'md')
 return false end
 end
-if text and text:match("^م2$") or text and text:match("^م٢$") or text and text:match("^اوامر2$") or text and text:match("^اوامر٢$") then
+if text == "م2" or text == "م٢" or text == "اوامر2" or text == "اوامر٢" then
+if not Admin(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ هذا الامر يخص الرتب الاعلى فقط\n❦ ⁞ ارسل ↫ (م6) لعرض اوامر الاعضاء', 1, 'md')
+else
 local Help = DevAek:get(AEK..'Aek:Help2')
 local text =  [[
 ❦ ⁞ اوامر الادمنيه ↫ ⤈
@@ -9370,8 +9361,8 @@ local text =  [[
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
 ]]
 Dev_Aek(msg.chat_id_, msg.id_, 1, (Help or text), 1, 'md')
-end
-if text and text:match("^تعيين امر م3$") and Sudo(msg) or text and text:match("^تعيين امر م٣$") and Sudo(msg) then
+end end
+if text == "تعيين امر م3" and SecondSudo(msg) or text == "تعيين امر م٣" and SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ ارسل كليشة (م3) الان " ,  1, "md")
 DevAek:set(AEK..'Aek:Help31'..msg.sender_user_id_, 'msg')
 return false end
@@ -9384,7 +9375,10 @@ DevAek:set(AEK..'Aek:Help3', text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, text , 1, 'md')
 return false end
 end
-if text and text:match("^م3$") or text and text:match("^م٣$") or text and text:match("^اوامر3$") or text and text:match("^اوامر٣$") then
+if text == "م3" or text == "م٣" or text == "اوامر3" or text == "اوامر٣" then
+if not Admin(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ هذا الامر يخص الرتب الاعلى فقط\n❦ ⁞ ارسل ↫ (م6) لعرض اوامر الاعضاء', 1, 'md')
+else
 local Help = DevAek:get(AEK..'Aek:Help3')
 local text =  [[
 ❦ ⁞ اوامر المدراء ↫ ⤈
@@ -9431,8 +9425,8 @@ local text =  [[
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
 ]]
 Dev_Aek(msg.chat_id_, msg.id_, 1, (Help or text), 1, 'md')
-end
-if text and text:match("^تعيين امر م4$") and Sudo(msg) or text and text:match("^تعيين امر م٤$") and Sudo(msg) then
+end end
+if text == "تعيين امر م4" and SecondSudo(msg) or text == "تعيين امر م٤" and SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ ارسل كليشة (م4) الان " ,  1, "md")
 DevAek:set(AEK..'Aek:Help41'..msg.sender_user_id_, 'msg')
 return false end
@@ -9445,7 +9439,10 @@ DevAek:set(AEK..'Aek:Help4', text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, text , 1, 'md')
 return false end
 end
-if text and text:match("^م٤$") or text and text:match("^م4$") or text and text:match("^اوامر4$") or text and text:match("^اوامر٤$") then
+if text == "م٤" or text == "م4" or text == "اوامر4" or text == "اوامر٤" then
+if not Admin(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ هذا الامر يخص الرتب الاعلى فقط\n❦ ⁞ ارسل ↫ (م6) لعرض اوامر الاعضاء', 1, 'md')
+else
 local Help = DevAek:get(AEK..'Aek:Help4')
 local text =  [[
 ❦ ⁞ اوامر المنشئين ↫ ⤈
@@ -9487,8 +9484,8 @@ local text =  [[
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
 ]]
 Dev_Aek(msg.chat_id_, msg.id_, 1, (Help or text), 1, 'md')
-end
-if text and text:match("^تعيين امر م5$") and Sudo(msg) or text and text:match("^تعيين امر م٥$") and Sudo(msg) then
+end end
+if text == "تعيين امر م5" and SecondSudo(msg) or text == "تعيين امر م٥" and SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ ارسل كليشة (م5) الان " ,  1, "md")
 DevAek:set(AEK..'Aek:Help51'..msg.sender_user_id_, 'msg')
 return false end
@@ -9501,9 +9498,9 @@ DevAek:set(AEK..'Aek:Help5', text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, text , 1, 'md')
 return false end
 end
-if text and text:match("^م٥$") or text and text:match("^م5$") or text and text:match("^اوامر5$") or text and text:match("^اوامر٥$") then
+if text == "م٥" or text == "م5" or text == "اوامر5" or text == "اوامر٥" then
 if not SudoBot(msg) then
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ هذا الامر للمطورين فقط ', 1, 'md')
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ هذا الامر للمطورين فقط', 1, 'md')
 else
 local Help = DevAek:get(AEK..'Aek:Help5')
 local text =  [[
@@ -9571,7 +9568,7 @@ local text =  [[
 ]]
 Dev_Aek(msg.chat_id_, msg.id_, 1, (Help or text), 1, 'md')
 end end
-if text and text:match("^تعيين امر م6$") and Sudo(msg) or text and text:match("^تعيين امر م٦$") and Sudo(msg) then
+if text == "تعيين امر م6" and SecondSudo(msg) or text == "تعيين امر م٦" and SecondSudo(msg) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ ارسل كليشة (م6) الان " ,  1, "md")
 DevAek:set(AEK..'Aek:Help61'..msg.sender_user_id_, 'msg')
 return false end
@@ -9584,8 +9581,7 @@ DevAek:set(AEK..'Aek:Help6', text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, text , 1, 'md')
 return false end
 end
-end
-if text and text:match("^م٦$") or text and text:match("^م6$") or text and text:match("^اوامر6$") or text and text:match("^اوامر٦$") then
+if text == "م٦" or text == "م6" or text == "اوامر6" or text == "اوامر٦" then
 local Help = DevAek:get(AEK..'Aek:Help6')
 local text =  [[
 ❦ ⁞ اوامر الاعضاء ↫ ⤈
