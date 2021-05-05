@@ -9461,7 +9461,7 @@ end
 --     Source AEK     --
 if SecondSudo(msg) then
 if text == "تحديث السورس" or text == "تحديث سورس" then 
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ جاري تحديث سورس ايك', 1, 'md') 
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ جاري تحديث سورس ايكان', 1, 'md') 
 os.execute('rm -rf AEK.lua') 
 os.execute('wget https://raw.githubusercontent.com/AEKANO/AEK/master/AEK.lua') 
 dofile('AEK.lua') 
