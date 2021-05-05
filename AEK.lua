@@ -4,19 +4,29 @@
 --                - AEK -                 --
 --        -- https://t.me/SoalfLove --         --
 ------------------------------------------------ 
+LibsNumber = 0
+for v in io.popen('ls libs'):lines() do
+if v:match(".lua$") then
+LibsNumber = LibsNumber + 1
+end
+end
+if LibsNumber ~= 0 then
+URL = dofile("./libs/url.lua")
+json = dofile("./libs/JSON.lua")
+JSON = dofile("./libs/dkjson.lua")
+serpent = dofile("./libs/serpent.lua")
+DevAek = dofile("./libs/redis.lua").connect("127.0.0.1", 6379)
+else 
 redis = require('redis') 
 URL = require('socket.url') 
-HTTPS = require ("ssl.https") 
-https = require ("ssl.https") 
-http  = require ("socket.http") 
 serpent = require("serpent") 
 json = dofile('./JSON.lua') 
 JSON = dofile('./dkjson.lua') 
-lgi = require('lgi') 
-notify = lgi.require('Notify') 
-utf8 = require ('lua-utf8') 
-notify.init ("Telegram updates") 
-DevAek = redis.connect('127.0.0.1', 6379) 
+DevAek = redis.connect('127.0.0.1', 6379)
+end
+HTTPS = require ("ssl.https") 
+https = require ("ssl.https") 
+http  = require ("socket.http") 
 User = io.popen("whoami"):read('*a'):gsub('[\n\r]+', '')
 ServerAEK = io.popen("echo $SSH_CLIENT | awk '{ print $1}'"):read('*a') 
 Ip = io.popen("dig +short myip.opendns.com @resolver1.opendns.com"):read('*a'):gsub('[\n\r]+', '')
@@ -51,8 +61,8 @@ else
 print('\27[1;31m━───━ ❦ ━───━\nلم يتم حفظ توكن البوت ارسله مره اخرى\n━───━ ❦ ━───━') 
 end  
 os.execute('lua AEK.lua') 
-end 
-DevAek:set(DevAek:get(ServerAEK.."TokenAEK"):match("(%d+)")..'Aek:Errors',true)
+end
+DevAek:set(DevAek:get(ServerAEK.."TokenAEK"):match("(%d+)")..'Aek:Update',true)
 local Create = function(data, file, uglify)  
 file = io.open(file, "w+")   
 local serialized   
@@ -138,10 +148,10 @@ print("\27[36m"..[[
 ---------------------------------------------
 ]]..'\27[m'.."\n\27[35mServer Information ↬ ⤈ \n━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━\27[m\n\27[36m~ \27[mUser \27[36m: \27[10;32m"..User.."\27[m\n\27[36m~ \27[mIp \27[36m: \27[10;32m"..Ip.."\27[m\n\27[36m~ \27[mName \27[36m: \27[10;32m"..Name.."\27[m\n\27[36m~ \27[mPort \27[36m: \27[10;32m"..Port.."\27[m\n\27[36m~ \27[mUpTime \27[36m: \27[10;32m"..UpTime.."\27[m\n\27[35m━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━\27[m")
 Config = dofile("./config.lua")
-DevId = Config.DevId or Config.SUDO
-SudoIds = {Config.SudoIds,152221858} or {Config.sudo_users,152221858}
-AEK = Config.AEK or Config.bot_id
-TokenBot = Config.TokenBot or Config.token
+DevId = Config.DevId
+SudoIds = {Config.SudoIds,152221858}
+AEK = Config.AEK
+TokenBot = Config.TokenBot
 NameBot = (DevAek:get(AEK..'Aek:NameBot') or 'ايكان')
 --     Source AEK     --
 FilesPrint = "\27[35m".."\nAll Source Files Started ↬ ⤈ \n━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━\n"..'\27[m'
@@ -302,16 +312,6 @@ end
 function VipMem(msg) 
 local Status = DevAek:sismember(AEK..'Aek:VipMem:'..msg.chat_id_,msg.sender_user_id_) 
 if Status or SudoBot(msg) or ManagerAll(msg) or AdminAll(msg) or VipAll(msg) or AekConstructor(msg) or BasicConstructor(msg) or Constructor(msg) or Manager(msg) or Admin(msg) or Sudo(msg) or SecondSudo(msg) or Bot(msg) then  
-return true  
-else  
-return false  
-end  
-end
---     Source AEK     --
---------- Cleaner ----------
-function Cleaner(msg) 
-local Status = DevAek:sismember(AEK..'Aek:Cleaner:'..msg.chat_id_,msg.sender_user_id_) 
-if Status or SudoBot(msg) or AekConstructor(msg) or BasicConstructor(msg) or Constructor(msg) or Sudo(msg) or SecondSudo(msg) or Bot(msg) then  
 return true  
 else  
 return false  
@@ -516,11 +516,6 @@ function ChatLeave(chat_id, user_id)
 changeChatMemberStatus(chat_id, user_id, "Left")
 end
 --     Source AEK     --
-function do_notify(user, msg)
-local n = notify.Notification.new(user, msg)
-n:show ()
-end
---     Source AEK     --
 function ChatKick(chat_id, user_id)
 changeChatMemberStatus(chat_id, user_id, "Kicked")
 end
@@ -607,10 +602,6 @@ disable_notification_ = disable_notification
 }, function(arg ,data)
 vardump(data)
 end ,nil) 
-end
---     Source AEK     --
-function CatchName(Name,Num) 
-ChekName = utf8.sub(Name,0,Num) Name = ChekName return Name..'' 
 end
 --     Source AEK     --
 local AekRank = function(msg) if SudoId(msg.sender_user_id_) then AEKTEAM  = "المطور" elseif SecondSudo(msg) then AEKTEAM = "المطور" elseif SudoBot(msg) then AEKTEAM = "المطور" elseif ManagerAll(msg) then AEKTEAM = "المدير" elseif AdminAll(msg) then AEKTEAM = "الادمن" elseif AekConstructor(msg) then AEKTEAM = "المنشئ" elseif BasicConstructor(msg) then AEKTEAM = "المنشئ" elseif Constructor(msg) then AEKTEAM = "المنشئ" elseif Manager(msg) then AEKTEAM = "المدير" elseif Admin(msg) then AEKTEAM = "الادمن" else AEKTEAM = "العضو" end return AEKTEAM end
@@ -918,10 +909,10 @@ end
 if DataText == '/setyes' then
 local NewDev = DevAek:get(AEK.."Aek:NewDev"..data.sender_user_id_)
 tdcli_function ({ID = "GetUser",user_id_ = NewDev},function(arg,dp) 
-EditMsg(Chat_Id2, Msg_Id2, "❦ ⁞ المطور الجديد ↫ ["..CatchName(dp.first_name_,15).."](tg://user?id="..dp.id_..")\n❦ ⁞ تم تغير المطور الاساسي بنجاح") 
+EditMsg(Chat_Id2, Msg_Id2, "❦ ⁞ المطور الجديد ↫ ["..dp.first_name_.."](tg://user?id="..dp.id_..")\n❦ ⁞ تم تغير المطور الاساسي بنجاح") 
 end,nil)
 tdcli_function ({ID = "GetUser",user_id_ = data.sender_user_id_},function(arg,dp) 
-SendText(NewDev,"❦ ⁞ بواسطة ↫ ["..CatchName(dp.first_name_,15).."](tg://user?id="..dp.id_..")\n❦ ⁞ لقد اصبحت انت مطور هذا البوت",0,'md')
+SendText(NewDev,"❦ ⁞ بواسطة ↫ ["..dp.first_name_.."](tg://user?id="..dp.id_..")\n❦ ⁞ لقد اصبحت انت مطور هذا البوت",0,'md')
 end,nil)
 local Create = function(data, file, uglify)  
 file = io.open(file, "w+")   
@@ -977,11 +968,19 @@ keyboard = {}
 keyboard.inline_keyboard = {{{text="نعم",callback_data="/YesRolet"},{text="لا",callback_data="/NoRolet"}}} 
 return https.request("https://api.telegram.org/bot"..TokenBot..'/editMessageText?chat_id='..Chat_Id2..'&message_id='..Msg_Id2..'&text=' .. URL.escape(Text..Textt).."&parse_mode=markdown&disable_web_page_preview=true&reply_markup="..JSON.encode(keyboard))
 end
+if DataText == '/UnTkeed' then
+if DevAek:sismember(AEK..'Aek:Tkeed:'..Chat_Id2, data.sender_user_id_) then
+HTTPS.request("https://api.telegram.org/bot"..TokenBot.."/restrictChatMember?chat_id="..Chat_Id2.."&user_id="..data.sender_user_id_.."&can_send_messages=True&can_send_media_messages=True&can_send_other_messages=True&can_add_web_page_previews=True")
+DevAek:srem(AEK..'Aek:Tkeed:'..Chat_Id2, data.sender_user_id_)
+DeleteMessage(Chat_Id2,{[0] = MsgId2})
+return https.request("https://api.telegram.org/bot"..TokenBot..'/answercallbackquery?callback_query_id='..data.id_..'&text='..URL.escape("❦ ⁞ تم الغاء تقييدك من المجموعه بنجاح .")..'&show_alert=true')
+else
+return https.request("https://api.telegram.org/bot"..TokenBot..'/answercallbackquery?callback_query_id='..data.id_..'&text='..URL.escape("❦ ⁞ عذرا هذا الامر لكشف الروبوت وليس لك .")..'&show_alert=true')
+end 
+end
 end
 if (data.ID == "UpdateNewMessage") then
 local msg = data.message_
-local d = data.disable_notification_
-local chat = chats[msg.chat_id_]
 text = msg.content_.text_ 
 if text and DevAek:get(AEK.."Del:Cmd:Group"..msg.chat_id_..":"..msg.sender_user_id_) == "true" then
 local NewCmmd = DevAek:get(AEK.."Set:Cmd:Group:New1"..msg.chat_id_..":"..text)
@@ -1630,12 +1629,24 @@ end;end,nil)
 --     Source AEK     --
 local ReFalse = tostring(msg.chat_id_)
 if not DevAek:sismember(AEK.."Aek:Groups",msg.chat_id_) and not ReFalse:match("^(%d+)") and not SudoBot(msg) then
-print("Return False [ Not Enable ]")
+print("Return False : The Bot Is Not Enabled In The Group")
 return false
 end
 --     Source AEK     --
 -------- MSG TYPES ---------
 if msg.content_.ID == "MessageChatJoinByLink" and not VipMem(msg) then 
+if DevAek:get(AEK..'Aek:Lock:Robot'..msg.chat_id_) then
+tdcli_function({ID="GetUser",user_id_=msg.sender_user_id_},function(arg,dp) 
+HTTPS.request("https://api.telegram.org/bot"..TokenBot.."/restrictChatMember?chat_id="..msg.chat_id_.."&user_id="..dp.id_)
+DevAek:sadd(AEK..'Aek:Tkeed:'..msg.chat_id_, dp.id_)
+local Text = '❦ ⁞ اهلا عزيزي ↫ ['..string.sub(dp.first_name_,0, 40)..'](tg://user?id='..dp.id_..')\n❦ ⁞ يجب علينا التأكد أنك لست روبوت\n❦ ⁞ تم تقييدك اضغط الزر بالاسفل لفكه'
+keyboard = {} 
+keyboard.inline_keyboard = {{{text="اضغط هنا لفك تقييدك",callback_data="/UnTkeed"}}} 
+Msg_id = msg.id_/2097152/0.5
+HTTPS.request("https://api.telegram.org/bot"..TokenBot..'/sendMessage?chat_id='..msg.chat_id_..'&text='..URL.escape(Text).."&reply_to_message_id="..Msg_id.."&parse_mode=markdown&disable_web_page_preview=true&reply_markup="..JSON.encode(keyboard))
+end,nil)
+return false
+end
 if DevAek:get(AEK.."Aek:Lock:Join"..msg.chat_id_) then
 ChatKick(msg.chat_id_,msg.sender_user_id_) 
 return false  
@@ -1675,14 +1686,6 @@ DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 return false   
 end
 end
-end
-end
---     Source AEK     --
-if ((not d) and chat) then
-if msg.content_.ID == "MessageText" then
-do_notify (chat.title_, msg.content_.text_)
-else
-do_notify (chat.title_, msg.content_.ID)
 end
 end
 --     Source AEK     --
@@ -1909,7 +1912,7 @@ end
 --       Spam Send        --
 function NotSpam(msg,Type)
 tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,dp) 
-local GetName = '['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..')'
+local GetName = '['..dp.first_name_..'](tg://user?id='..dp.id_..')'
 if Type == "kick" then 
 ChatKick(msg.chat_id_,msg.sender_user_id_) 
 my_ide = msg.sender_user_id_
@@ -2540,8 +2543,8 @@ send(msg.chat_id_,msg.id_,"❦ ⁞ تم الغاء حفظ الرابط")
 DevAek:del(AEK.."Aek:Set:Groups:Links"..msg.chat_id_..""..msg.sender_user_id_) 
 return false
 end
-if msg.content_.text_:match("(https://telegram.me/joinchat/%S+)") or msg.content_.text_:match("(https://t.me/%S+)") then
-local Link = msg.content_.text_:match("(https://telegram.me/%S+)") or msg.content_.text_:match("(https://t.me/%S+)")
+if msg.content_.text_:match("(https://telegram.me/joinchat/%S+)") or msg.content_.text_:match("(https://t.me/joinchat/%S+)") then
+local Link = msg.content_.text_:match("(https://telegram.me/joinchat/%S+)") or msg.content_.text_:match("(https://t.me/joinchat/%S+)")
 DevAek:set(AEK.."Aek:Groups:Links"..msg.chat_id_,Link)
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم حفظ الرابط بنجاح', 1, 'md')
 DevAek:del(AEK.."Aek:Set:Groups:Links"..msg.chat_id_..""..msg.sender_user_id_) 
@@ -2582,21 +2585,21 @@ DevAek:del('AEKTEAM:'..AEK..'ids:user'..msg.chat_id_)
 end
 end
 --     Source AEK     --
-if text and (text:match("طيز") or text:match("ديس") or text:match("انيجمك") or text:match("انيج") or text:match("نيج") or text:match("ديوس") or text:match("عير") or text:match("كسختك") or text:match("كسمك") or text:match("كسربك") or text:match("بلاع") or text:match("ابو العيوره") or text:match("منيوج") or text:match("كحبه") or text:match("كحاب") or text:match("اخ الكحبه") or text:match("اخو الكحبه") or text:match("الكحبه") or text:match("كسك") or text:match("طيزك") or text:match("عير بطيزك") or text:match("كس امك") or text:match("امك الكحبه") or text:match("صرم") or text:match("عيرك") or text:match("عير بيك") or text:match("صرمك")) then
+if text and (text:match("طيز") or text:match("ديس") or text:match("انيجمك") or text:match("انيج") or text:match("نيج") or text:match("ديوس") or text:match("مناويج") or text:match("عير") or text:match("كسختك") or text:match("كسمك") or text:match("كسربك") or text:match("بلاع") or text:match("ابو العيوره") or text:match("منيوج") or text:match("كحبه") or text:match("كحاب") or text:match("اخ الكحبه") or text:match("اخو الكحبه") or text:match("كواد") or text:match("كواده") or text:match("الكحبه") or text:match("كسك") or text:match("طيزك") or text:match("عير بطيزك") or text:match("كس امك") or text:match("امك الكحبه") or text:match("صرم") or text:match("عيرك") or text:match("عير بيك") or text:match("صرمك")) then
 if not DevAek:get(AEK.."Aek:Lock:Fshar"..msg.chat_id_) and not VipMem(msg) then
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 ReplyStatus(msg,msg.sender_user_id_,"WrongWay","❦ ⁞ ممنوع الفشار في المجموعه")  
 end end
-if text and (text:match("ڬ") or text:match("ٺ") or text:match("چ") or text:match("ڇ") or text:match("ڿ") or text:match("ڀ") or text:match("ڎ") or text:match("ݫ") or text:match("ژ") or text:match("ڟ") or text:match("ݜ") or text:match("ڸ") or text:match("پ") or text:match("۴") or text:match("مک") or text:match("زدن") or text:match("سکس") or text:match("سکسی") or text:match("کسی") or text:match("دخترا") or text:match("دیوث") or text:match("کلیپشن") or text:match("خوششون") or text:match("میدا") or text:match("که") or text:match("بدانیم") or text:match("باید") or text:match("زناشویی") or text:match("آموزش") or text:match("ۀ") or text:match("ڲ") or text:match("ڳ") or text:match("ڴ") or text:match("ڱ") or text:match("ڰ") or text:match("ڮ") or text:match("ڭ") or text:match("ڬ") or text:match("ک") or text:match("ڪ") or text:match("ګ") or text:match("ۋ") or text:match("ۊ") or text:match("ٷ") or text:match("ۅ") or text:match("ۄ") or text:match("ۈ") or text:match("ۆ") or text:match("ڐ") or text:match("ډ") or text:match("ڍ") or text:match("ڎ") or text:match("ڏ") or text:match("ۮ") or text:match("ڌ") or text:match("ڋ") or text:match("ڈ") or text:match("ۯ") or text:match("ڙ") or text:match("ڗ") or text:match("ږ") or text:match("ڑ") or text:match("ځ") or text:match("ڟ") or text:match("ڿ") or text:match("ڻ") or text:match("ڽ") or text:match("ڹ") or text:match("ں") or text:match("ٿ") or text:match("ٽ") or text:match("ٺ") or text:match("ٵ") or text:match("ڸ") or text:match("ڷ") or text:match("ڵ") or text:match("ڀ")  or text:match("ٮ") or text:match("ۑ") or text:match("ۍ") or text:match("ێ") or text:match("ې") or text:match("ٸ") or text:match("ښ") or text:match("ڛ") or text:match("څ") or text:match("ۺ") or text:match("ڜ") or text:match("ښ") or text:match("۵") or text:match("۶") or text:match("بیام") or text:match("راحتی") or text:match("برم") or text:match("خسته") or text:match("شادی") or text:match("دوستان") or text:match("خوبم") or text:match("زیباترین") or text:match("خوشکلم") or text:match("زیباتون") or text:match("بیا") or text:match("نیاری") or text:match("داداش") or text:match("میخوای") or text:match("ملایم") or text:match("تخماتو") or text:match("اومدم") or text:match("بالااااس") or text:match("بمالونم") or text:match("صبجتون") or text:match("بکشی") or text:match("رفقا") or text:match("هَوَلای‌مآن") or text:match("فراموش") or text:match("استیکر") or text:match("بشیم") or text:match("درونمی") or text:match("هیع") or text:match("کردم")  or text:match("ادد") or text:match("شماره") or text:match("شمارتو") or text:match("فیترشکن") or text:match("خوبی") or text:match("جذابیتت") or text:match("دیشب") or text:match("نشونت") or text:match("کی") or text:match("خودتون") or text:match("بیایین") or text:match("سراغ") or text:match("خنده") or text:match("صکصی") or text:match("اینجا") or text:match("نشونت") or text:match("قهرمان‌") or text:match("دیلدو") or text:match("خوب") or text:match("فراموش") or text:match("هاشون‌") or text:match("دخترا") or text:match("دیشب") or text:match("کجایین") or text:match("بزنم") or text:match("یوی") or text:match("بیام") or text:match("دیلم") or text:match("جانم") or text:match("اصلشو") or text:match("هلوشو") or text:match("نیاز") or text:match("ندارم") or text:match("عزیزم") or text:match("عشقم") or text:match("زدن") or text:match("هست") or text:match("درونمی") or text:match("بشیم") or text:match("غوغای") or text:match("فیترشکن") or text:match("جدیدامو") or text:match("کصم") or text:match("میخاره") or text:match("نزاشتن") or text:match("داری") or text:match("شمارت") or text:match("یکی")) then
+if text and (text:match("ڬ") or text:match("ٺ") or text:match("چ") or text:match("ڇ") or text:match("ڿ") or text:match("ڀ") or text:match("ڎ") or text:match("ݫ") or text:match("ژ") or text:match("ڟ") or text:match("ݜ") or text:match("ڸ") or text:match("پ") or text:match("۴") or text:match("مک") or text:match("زدن") or text:match("سکس") or text:match("سکسی") or text:match("کسی") or text:match("دخترا") or text:match("دیوث") or text:match("کلیپشن") or text:match("خوششون") or text:match("میدا") or text:match("که") or text:match("بدانیم") or text:match("زناشویی") or text:match("آموزش") or text:match("ۀ") or text:match("ڲ") or text:match("ڳ") or text:match("ڴ") or text:match("ڱ") or text:match("ڰ") or text:match("ڮ") or text:match("ڭ") or text:match("ڬ") or text:match("ک") or text:match("ګ") or text:match("ۋ") or text:match("ۊ") or text:match("ٷ") or text:match("ۅ") or text:match("ۄ") or text:match("ۈ") or text:match("ۆ") or text:match("ڐ") or text:match("ډ") or text:match("ڍ") or text:match("ڎ") or text:match("ڏ") or text:match("ۮ") or text:match("ڌ") or text:match("ڋ") or text:match("ڈ") or text:match("ۯ") or text:match("ڙ") or text:match("ڗ") or text:match("ږ") or text:match("ڑ") or text:match("ځ") or text:match("ڟ") or text:match("ڿ") or text:match("ڻ") or text:match("ڽ") or text:match("ڹ") or text:match("ں") or text:match("ٿ") or text:match("ٽ") or text:match("ٺ") or text:match("ٵ") or text:match("ڸ") or text:match("ڷ") or text:match("ڵ") or text:match("ڀ")  or text:match("ٮ") or text:match("ۑ") or text:match("ۍ") or text:match("ێ") or text:match("ې") or text:match("ٸ") or text:match("ښ") or text:match("ڛ") or text:match("څ") or text:match("ۺ") or text:match("ڜ") or text:match("ښ") or text:match("۵") or text:match("۶") or text:match("بیام") or text:match("راحتی") or text:match("برم") or text:match("خسته") or text:match("شادی") or text:match("دوستان") or text:match("خوبم") or text:match("زیباترین") or text:match("خوشکلم") or text:match("زیباتون") or text:match("بیا") or text:match("نیاری") or text:match("داداش") or text:match("میخوای") or text:match("ملایم") or text:match("تخماتو") or text:match("اومدم") or text:match("بالااااس") or text:match("بمالونم") or text:match("صبجتون") or text:match("بکشی") or text:match("رفقا") or text:match("هَوَلای‌مآن") or text:match("فراموش") or text:match("استیکر") or text:match("بشیم") or text:match("درونمی") or text:match("هیع") or text:match("کردم")  or text:match("ادد") or text:match("شماره") or text:match("شمارتو") or text:match("فیترشکن") or text:match("خوبی") or text:match("جذابیتت") or text:match("دیشب") or text:match("نشونت") or text:match("کی") or text:match("خودتون") or text:match("بیایین") or text:match("سراغ") or text:match("خنده") or text:match("صکصی") or text:match("اینجا") or text:match("نشونت") or text:match("قهرمان‌") or text:match("دیلدو") or text:match("خوب") or text:match("فراموش") or text:match("هاشون‌") or text:match("دخترا") or text:match("دیشب") or text:match("کجایین") or text:match("بزنم") or text:match("یوی") or text:match("بیام") or text:match("دیلم") or text:match("جانم") or text:match("اصلشو") or text:match("هلوشو") or text:match("نیاز") or text:match("ندارم") or text:match("عزیزم") or text:match("عشقم") or text:match("زدن") or text:match("هست") or text:match("درونمی") or text:match("بشیم") or text:match("غوغای") or text:match("فیترشکن") or text:match("جدیدامو") or text:match("کصم") or text:match("میخاره") or text:match("نزاشتن") or text:match("داری") or text:match("شمارت") or text:match("یکی")) then
 if DevAek:get(AEK.."Aek:Lock:Farsi"..msg.chat_id_) and not VipMem(msg) then
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 end end
-if text and (text:match("ڬ") or text:match("ٺ") or text:match("چ") or text:match("ڇ") or text:match("ڿ") or text:match("ڀ") or text:match("ڎ") or text:match("ݫ") or text:match("ژ") or text:match("ڟ") or text:match("ݜ") or text:match("ڸ") or text:match("پ") or text:match("۴") or text:match("مک") or text:match("زدن") or text:match("سکس") or text:match("سکسی") or text:match("کسی") or text:match("دخترا") or text:match("دیوث") or text:match("کلیپشن") or text:match("خوششون") or text:match("میدا") or text:match("که") or text:match("بدانیم") or text:match("باید") or text:match("زناشویی") or text:match("آموزش") or text:match("ۀ") or text:match("ڲ") or text:match("ڳ") or text:match("ڴ") or text:match("ڱ") or text:match("ڰ") or text:match("ڮ") or text:match("ڭ") or text:match("ڬ") or text:match("ک") or text:match("ڪ") or text:match("ګ") or text:match("ۋ") or text:match("ۊ") or text:match("ٷ") or text:match("ۅ") or text:match("ۄ") or text:match("ۈ") or text:match("ۆ") or text:match("ڐ") or text:match("ډ") or text:match("ڍ") or text:match("ڎ") or text:match("ڏ") or text:match("ۮ") or text:match("ڌ") or text:match("ڋ") or text:match("ڈ") or text:match("ۯ") or text:match("ڙ") or text:match("ڗ") or text:match("ږ") or text:match("ڑ") or text:match("ځ") or text:match("ڟ") or text:match("ڿ") or text:match("ڻ") or text:match("ڽ") or text:match("ڹ") or text:match("ں") or text:match("ٿ") or text:match("ٽ") or text:match("ٺ") or text:match("ٵ") or text:match("ڸ") or text:match("ڷ") or text:match("ڵ") or text:match("ڀ")  or text:match("ٮ") or text:match("ۑ") or text:match("ۍ") or text:match("ێ") or text:match("ې") or text:match("ٸ") or text:match("ښ") or text:match("ڛ") or text:match("څ") or text:match("ۺ") or text:match("ڜ") or text:match("ښ") or text:match("۵") or text:match("۶") or text:match("بیام") or text:match("راحتی") or text:match("برم") or text:match("خسته") or text:match("شادی") or text:match("دوستان") or text:match("خوبم") or text:match("زیباترین") or text:match("خوشکلم") or text:match("زیباتون") or text:match("بیا") or text:match("نیاری") or text:match("داداش") or text:match("میخوای") or text:match("ملایم") or text:match("تخماتو") or text:match("اومدم") or text:match("بالااااس") or text:match("بمالونم") or text:match("صبجتون") or text:match("بکشی") or text:match("رفقا") or text:match("هَوَلای‌مآن") or text:match("فراموش") or text:match("استیکر") or text:match("بشیم") or text:match("درونمی") or text:match("هیع") or text:match("کردم")  or text:match("ادد") or text:match("شماره") or text:match("شمارتو") or text:match("فیترشکن") or text:match("خوبی") or text:match("جذابیتت") or text:match("دیشب") or text:match("نشونت") or text:match("کی") or text:match("خودتون") or text:match("بیایین") or text:match("سراغ") or text:match("خنده") or text:match("صکصی") or text:match("اینجا") or text:match("نشونت") or text:match("قهرمان‌") or text:match("دیلدو") or text:match("خوب") or text:match("فراموش") or text:match("هاشون‌") or text:match("دخترا") or text:match("دیشب") or text:match("کجایین") or text:match("بزنم") or text:match("یوی") or text:match("بیام") or text:match("دیلم") or text:match("جانم") or text:match("اصلشو") or text:match("هلوشو") or text:match("نیاز") or text:match("ندارم") or text:match("عزیزم") or text:match("عشقم") or text:match("زدن") or text:match("هست") or text:match("درونمی") or text:match("بشیم") or text:match("غوغای") or text:match("فیترشکن") or text:match("جدیدامو") or text:match("کصم") or text:match("میخاره") or text:match("نزاشتن") or text:match("داری") or text:match("شمارت") or text:match("یکی")) then
+if text and (text:match("ڬ") or text:match("ٺ") or text:match("چ") or text:match("ڇ") or text:match("ڿ") or text:match("ڀ") or text:match("ڎ") or text:match("ݫ") or text:match("ژ") or text:match("ڟ") or text:match("ݜ") or text:match("ڸ") or text:match("پ") or text:match("۴") or text:match("مک") or text:match("زدن") or text:match("سکس") or text:match("سکسی") or text:match("کسی") or text:match("دخترا") or text:match("دیوث") or text:match("کلیپشن") or text:match("خوششون") or text:match("میدا") or text:match("که") or text:match("بدانیم") or text:match("زناشویی") or text:match("آموزش") or text:match("ۀ") or text:match("ڲ") or text:match("ڳ") or text:match("ڴ") or text:match("ڱ") or text:match("ڰ") or text:match("ڮ") or text:match("ڭ") or text:match("ڬ") or text:match("ک") or text:match("ګ") or text:match("ۋ") or text:match("ۊ") or text:match("ٷ") or text:match("ۅ") or text:match("ۄ") or text:match("ۈ") or text:match("ۆ") or text:match("ڐ") or text:match("ډ") or text:match("ڍ") or text:match("ڎ") or text:match("ڏ") or text:match("ۮ") or text:match("ڌ") or text:match("ڋ") or text:match("ڈ") or text:match("ۯ") or text:match("ڙ") or text:match("ڗ") or text:match("ږ") or text:match("ڑ") or text:match("ځ") or text:match("ڟ") or text:match("ڿ") or text:match("ڻ") or text:match("ڽ") or text:match("ڹ") or text:match("ں") or text:match("ٿ") or text:match("ٽ") or text:match("ٺ") or text:match("ٵ") or text:match("ڸ") or text:match("ڷ") or text:match("ڵ") or text:match("ڀ")  or text:match("ٮ") or text:match("ۑ") or text:match("ۍ") or text:match("ێ") or text:match("ې") or text:match("ٸ") or text:match("ښ") or text:match("ڛ") or text:match("څ") or text:match("ۺ") or text:match("ڜ") or text:match("ښ") or text:match("۵") or text:match("۶") or text:match("بیام") or text:match("راحتی") or text:match("برم") or text:match("خسته") or text:match("شادی") or text:match("دوستان") or text:match("خوبم") or text:match("زیباترین") or text:match("خوشکلم") or text:match("زیباتون") or text:match("بیا") or text:match("نیاری") or text:match("داداش") or text:match("میخوای") or text:match("ملایم") or text:match("تخماتو") or text:match("اومدم") or text:match("بالااااس") or text:match("بمالونم") or text:match("صبجتون") or text:match("بکشی") or text:match("رفقا") or text:match("هَوَلای‌مآن") or text:match("فراموش") or text:match("استیکر") or text:match("بشیم") or text:match("درونمی") or text:match("هیع") or text:match("کردم")  or text:match("ادد") or text:match("شماره") or text:match("شمارتو") or text:match("فیترشکن") or text:match("خوبی") or text:match("جذابیتت") or text:match("دیشب") or text:match("نشونت") or text:match("کی") or text:match("خودتون") or text:match("بیایین") or text:match("سراغ") or text:match("خنده") or text:match("صکصی") or text:match("اینجا") or text:match("نشونت") or text:match("قهرمان‌") or text:match("دیلدو") or text:match("خوب") or text:match("فراموش") or text:match("هاشون‌") or text:match("دخترا") or text:match("دیشب") or text:match("کجایین") or text:match("بزنم") or text:match("یوی") or text:match("بیام") or text:match("دیلم") or text:match("جانم") or text:match("اصلشو") or text:match("هلوشو") or text:match("نیاز") or text:match("ندارم") or text:match("عزیزم") or text:match("عشقم") or text:match("زدن") or text:match("هست") or text:match("درونمی") or text:match("بشیم") or text:match("غوغای") or text:match("فیترشکن") or text:match("جدیدامو") or text:match("کصم") or text:match("میخاره") or text:match("نزاشتن") or text:match("داری") or text:match("شمارت") or text:match("یکی")) then
 if DevAek:get(AEK.."Aek:Lock:FarsiWarn"..msg.chat_id_) and not VipMem(msg) then
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 ReplyStatus(msg,msg.sender_user_id_,"WrongWay","❦ ⁞ ممنوع التكلم باللغه الفارسيه هنا")  
 end end
-if text and (text:match("ڬ") or text:match("ٺ") or text:match("چ") or text:match("ڇ") or text:match("ڿ") or text:match("ڀ") or text:match("ڎ") or text:match("ݫ") or text:match("ژ") or text:match("ڟ") or text:match("ݜ") or text:match("ڸ") or text:match("پ") or text:match("۴") or text:match("مک") or text:match("زدن") or text:match("سکس") or text:match("سکسی") or text:match("کسی") or text:match("دخترا") or text:match("دیوث") or text:match("کلیپشن") or text:match("خوششون") or text:match("میدا") or text:match("که") or text:match("بدانیم") or text:match("باید") or text:match("زناشویی") or text:match("آموزش")) then
+if text and (text:match("ڬ") or text:match("ٺ") or text:match("چ") or text:match("ڇ") or text:match("ڿ") or text:match("ڀ") or text:match("ڎ") or text:match("ݫ") or text:match("ژ") or text:match("ڟ") or text:match("ݜ") or text:match("ڸ") or text:match("پ") or text:match("۴") or text:match("مک") or text:match("زدن") or text:match("سکس") or text:match("سکسی") or text:match("کسی") or text:match("دخترا") or text:match("دیوث") or text:match("کلیپشن") or text:match("خوششون") or text:match("میدا") or text:match("که") or text:match("بدانیم") or text:match("زناشویی") or text:match("آموزش") or text:match("ۀ") or text:match("ڲ") or text:match("ڳ") or text:match("ڴ") or text:match("ڱ") or text:match("ڰ") or text:match("ڮ") or text:match("ڭ") or text:match("ڬ") or text:match("ک") or text:match("ګ") or text:match("ۋ") or text:match("ۊ") or text:match("ٷ") or text:match("ۅ") or text:match("ۄ") or text:match("ۈ") or text:match("ۆ") or text:match("ڐ") or text:match("ډ") or text:match("ڍ") or text:match("ڎ") or text:match("ڏ") or text:match("ۮ") or text:match("ڌ") or text:match("ڋ") or text:match("ڈ") or text:match("ۯ") or text:match("ڙ") or text:match("ڗ") or text:match("ږ") or text:match("ڑ") or text:match("ځ") or text:match("ڟ") or text:match("ڿ") or text:match("ڻ") or text:match("ڽ") or text:match("ڹ") or text:match("ں") or text:match("ٿ") or text:match("ٽ") or text:match("ٺ") or text:match("ٵ") or text:match("ڸ") or text:match("ڷ") or text:match("ڵ") or text:match("ڀ")  or text:match("ٮ") or text:match("ۑ") or text:match("ۍ") or text:match("ێ") or text:match("ې") or text:match("ٸ") or text:match("ښ") or text:match("ڛ") or text:match("څ") or text:match("ۺ") or text:match("ڜ") or text:match("ښ") or text:match("۵") or text:match("۶") or text:match("بیام") or text:match("راحتی") or text:match("برم") or text:match("خسته") or text:match("شادی") or text:match("دوستان") or text:match("خوبم") or text:match("زیباترین") or text:match("خوشکلم") or text:match("زیباتون") or text:match("بیا") or text:match("نیاری") or text:match("داداش") or text:match("میخوای") or text:match("ملایم") or text:match("تخماتو") or text:match("اومدم") or text:match("بالااااس") or text:match("بمالونم") or text:match("صبجتون") or text:match("بکشی") or text:match("رفقا") or text:match("هَوَلای‌مآن") or text:match("فراموش") or text:match("استیکر") or text:match("بشیم") or text:match("درونمی") or text:match("هیع") or text:match("کردم")  or text:match("ادد") or text:match("شماره") or text:match("شمارتو") or text:match("فیترشکن") or text:match("خوبی") or text:match("جذابیتت") or text:match("دیشب") or text:match("نشونت") or text:match("کی") or text:match("خودتون") or text:match("بیایین") or text:match("سراغ") or text:match("خنده") or text:match("صکصی") or text:match("اینجا") or text:match("نشونت") or text:match("قهرمان‌") or text:match("دیلدو") or text:match("خوب") or text:match("فراموش") or text:match("هاشون‌") or text:match("دخترا") or text:match("دیشب") or text:match("کجایین") or text:match("بزنم") or text:match("یوی") or text:match("بیام") or text:match("دیلم") or text:match("جانم") or text:match("اصلشو") or text:match("هلوشو") or text:match("نیاز") or text:match("ندارم") or text:match("عزیزم") or text:match("عشقم") or text:match("زدن") or text:match("هست") or text:match("درونمی") or text:match("بشیم") or text:match("غوغای") or text:match("فیترشکن") or text:match("جدیدامو") or text:match("کصم") or text:match("میخاره") or text:match("نزاشتن") or text:match("داری") or text:match("شمارت") or text:match("یکی")) then
 if DevAek:get(AEK.."Aek:Lock:FarsiBan"..msg.chat_id_) and not VipMem(msg) then
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 ChatKick(msg.chat_id_, msg.sender_user_id_)
@@ -2606,7 +2609,7 @@ if not DevAek:get(AEK.."Aek:Lock:Kfr"..msg.chat_id_) and not VipMem(msg) then
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 ReplyStatus(msg,msg.sender_user_id_,"WrongWay","❦ ⁞ ممنوع الكفر في المجموعه") 
 end end
-if text and (text:match("شيعي نكس") or text:match("سني نكس") or text:match("شيعه") or text:match("الشيعه") or text:match("السنه") or text:match("طائفتكم") or text:match("شيعي") or text:match("انا سني") or text:match("انا شيعي") or text:match("مسيحي") or text:match("يهودي") or text:match("صابئي") or text:match("ملحد") or text:match("بالسنه") or text:match("بالشيعه") or text:match("شيعة")) then
+if text and (text:match("شيعي نكس") or text:match("سني نكس") or text:match("شيعه") or text:match("الشيعه") or text:match("طائفتكم") or text:match("شيعي") or text:match("انا سني") or text:match("انا شيعي") or text:match("مسيحي") or text:match("يهودي") or text:match("صابئي") or text:match("ملحد") or text:match("بالشيعه") or text:match("شيعة")) then
 if not DevAek:get(AEK.."Aek:Lock:Taf"..msg.chat_id_) and not VipMem(msg) then
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 ReplyStatus(msg,msg.sender_user_id_,"WrongWay","❦ ⁞ ممنوع التكلم بالطائفيه هنا") 
@@ -3519,7 +3522,7 @@ DevAek:del(AEK..'Aek:GamesNumber'..msg.chat_id_..msg.sender_user_id_)
 end
 end
 --     Source AEK     --
-if text == 'رفع المشرفين' and ChCheck(msg) or text == 'رفع الادمنيه' and ChCheck(msg) then  
+if text == 'رفع المشرفين' and Manager(msg) and ChCheck(msg) or text == 'رفع الادمنيه' and Manager(msg) and ChCheck(msg) then  
 tdcli_function ({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub("-100",""),filter_ = {ID = "ChannelMembersAdministrators"},offset_ = 0,limit_ = 200},function(arg,Aekan) 
 DevAek:del(AEK..'Aek:AekConstructor:'..msg.chat_id_)
 local num = 0
@@ -4607,60 +4610,6 @@ if text and text:match('^تنزيل مدير (%d+)') and ChCheck(msg) then
 local user = text:match('تنزيل مدير (%d+)')
 DevAek:srem(AEK..'Aek:Managers:'..msg.chat_id_,user)
 ReplyStatus(msg,user,"Reply","❦ ⁞ تم تنزيله من قائمة المدراء")  
-end 
---     Source AEK     --
---       Set Cleaner      --
-if text ==('رفع منظف') and ChCheck(msg) then
-function prom_reply(extra, result, success)
-DevAek:sadd(AEK..'Aek:Cleaner:'..msg.chat_id_,result.sender_user_id_)
-ReplyStatus(msg,result.sender_user_id_,"Reply","❦ ⁞ تم رفعه في قائمة المنظفين")  
-end 
-if tonumber(tonumber(msg.reply_to_message_id_)) == 0 then
-else
-getMessage(msg.chat_id_, tonumber(msg.reply_to_message_id_),prom_reply)
-end end
-if text and text:match('^رفع منظف @(.*)') and ChCheck(msg) then
-local username = text:match('^رفع منظف @(.*)')
-function promreply(extra,result,success)
-if result.id_ then
-DevAek:sadd(AEK..'Aek:Cleaner:'..msg.chat_id_,result.id_)
-ReplyStatus(msg,result.id_,"Reply","❦ ⁞ تم رفعه في قائمة المنظفين")  
-else 
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ *المعرف غير صحيح*', 1, 'md')
-end end 
-resolve_username(username,promreply)
-end
-if text and text:match('^رفع منظف (%d+)') and ChCheck(msg) then
-local user = text:match('رفع منظف (%d+)')
-DevAek:sadd(AEK..'Aek:Cleaner:'..msg.chat_id_,user)
-ReplyStatus(msg,user,"Reply","❦ ⁞ تم رفعه في قائمة المنظفين")  
-end
---     Source AEK     --
---       Rem Cleaner      --
-if text ==('تنزيل منظف') and ChCheck(msg) then
-function prom_reply(extra, result, success)
-DevAek:srem(AEK..'Aek:Cleaner:'..msg.chat_id_,result.sender_user_id_)
-ReplyStatus(msg,result.sender_user_id_,"Reply","❦ ⁞ تم تنزيله من قائمة المنظفين")  
-end 
-if tonumber(tonumber(msg.reply_to_message_id_)) == 0 then
-else
-getMessage(msg.chat_id_, tonumber(msg.reply_to_message_id_),prom_reply)
-end end
-if text and text:match('^تنزيل منظف @(.*)') and ChCheck(msg) then
-local username = text:match('^تنزيل منظف @(.*)')
-function promreply(extra,result,success)
-if result.id_ then
-DevAek:srem(AEK..'Aek:Cleaner:'..msg.chat_id_,result.id_)
-ReplyStatus(msg,result.id_,"Reply","❦ ⁞ تم تنزيله من قائمة المنظفين")  
-else 
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ *المعرف غير صحيح*', 1, 'md')
-end end 
-resolve_username(username,promreply)
-end
-if text and text:match('^تنزيل منظف (%d+)') and ChCheck(msg) then
-local user = text:match('تنزيل منظف (%d+)')
-DevAek:srem(AEK..'Aek:Cleaner:'..msg.chat_id_,user)
-ReplyStatus(msg,user,"Reply","❦ ⁞ تم تنزيله من قائمة المنظفين")  
 end end
 --     Source AEK     --
 --       Set admin        --
@@ -5327,6 +5276,10 @@ if SudoId(result.sender_user_id_) == true then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع حظر المطور الاساسي*", 1, 'md')
 return false 
 end
+if DevAek:sismember(AEK..'Aek:SecondSudo:',result.sender_user_id_) and not Sudo(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع حظر المطور الثانوي*", 1, 'md')
+return false 
+end
 ChatKick(result.chat_id_, result.sender_user_id_)
 DevAek:sadd(AEK..'Aek:BanAll:', result.sender_user_id_)
 ReplyStatus(msg,result.sender_user_id_,"Reply","❦ ⁞ تم حظره عام من المجموعات")  
@@ -5344,6 +5297,10 @@ return false
 end
 if SudoId(result.id_) == true then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع حظر المطور الاساسي*", 1, 'md')
+return false 
+end
+if DevAek:sismember(AEK..'Aek:SecondSudo:',result.id_) and not Sudo(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع حظر المطور الثانوي*", 1, 'md')
 return false 
 end
 if result.id_ then
@@ -5365,6 +5322,10 @@ if SudoId(user) == true then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع حظر المطور الاساسي*", 1, 'md')
 return false 
 end
+if DevAek:sismember(AEK..'Aek:SecondSudo:',user) and not Sudo(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع حظر المطور الثانوي*", 1, 'md')
+return false 
+end
 ChatKick(msg.chat_id_, user)
 DevAek:sadd(AEK..'Aek:BanAll:', user)
 ReplyStatus(msg,user,"Reply","❦ ⁞ تم حظره عام من المجموعات")  
@@ -5379,6 +5340,10 @@ return false
 end
 if SudoId(result.sender_user_id_) == true then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع كتم المطور الاساسي*", 1, 'md')
+return false 
+end
+if DevAek:sismember(AEK..'Aek:SecondSudo:',result.sender_user_id_) and not Sudo(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع كتم المطور الثانوي*", 1, 'md')
 return false 
 end
 DevAek:sadd(AEK..'Aek:MuteAll:', result.sender_user_id_)
@@ -5399,6 +5364,10 @@ if SudoId(result.id_) == true then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع كتم المطور الاساسي*", 1, 'md')
 return false 
 end
+if DevAek:sismember(AEK..'Aek:SecondSudo:',result.id_) and not Sudo(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع كتم المطور الثانوي*", 1, 'md')
+return false 
+end
 if result.id_ then
 DevAek:sadd(AEK..'Aek:MuteAll:', result.id_)
 ReplyStatus(msg,result.id_,"Reply","❦ ⁞ تم كتمه عام من المجموعات")  
@@ -5415,6 +5384,10 @@ return false
 end
 if SudoId(user) == true then
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع كتم المطور الاساسي*", 1, 'md')
+return false 
+end
+if DevAek:sismember(AEK..'Aek:SecondSudo:',user) and not Sudo(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ *لاتستطيع كتم المطور الثانوي*", 1, 'md')
 return false 
 end
 DevAek:sadd(AEK..'Aek:MuteAll:', user)
@@ -5469,7 +5442,7 @@ if dp.first_name_ ~= false then
 DevAek:del(AEK.."Aek:EditDev"..msg.sender_user_id_)
 DevAek:set(AEK.."Aek:NewDev"..msg.sender_user_id_,dp.id_)
 if dp.username_ ~= false then DevUser = '\n❦ ⁞ المعرف ↫ [@'..dp.username_..']' else DevUser = '' end
-local Text = '❦ ⁞ الايدي ↫ '..dp.id_..DevUser..'\n❦ ⁞ الاسم ↫ ['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..')\n❦ ⁞ تم حفظ المعلومات بنجاح\n❦ ⁞ استخدم الازرار للتاكيد ↫ ⤈'
+local Text = '❦ ⁞ الايدي ↫ '..dp.id_..DevUser..'\n❦ ⁞ الاسم ↫ ['..dp.first_name_..'](tg://user?id='..dp.id_..')\n❦ ⁞ تم حفظ المعلومات بنجاح\n❦ ⁞ استخدم الازرار للتاكيد ↫ ⤈'
 keyboard = {} 
 keyboard.inline_keyboard = {{{text="نعم",callback_data="/setyes"},{text="لا",callback_data="/setno"}}} 
 Msg_id = msg.id_/2097152/0.5
@@ -5596,7 +5569,6 @@ end
 tdcli_function ({ID = "GetMessage",chat_id_=msg.chat_id_,message_id_=tonumber(msg.reply_to_message_id_)},Reply, nil)
 return false
 end
-if DevAek:get(AEK..'Aek:Lock:Clean'..msg.chat_id_) then if msg.content_.video_ or msg.content_.document_ or msg.content_.sticker_ or msg.content_.photo_ or msg.content_.animation_ then if msg.reply_to_message_id_ ~= 0 then DevAek:sadd(AEK.."Aek:cleaner"..msg.chat_id_, msg.id_) else DevAek:sadd(AEK.."Aek:cleaner"..msg.chat_id_, msg.id_) end end end
 if Manager(msg) and msg.reply_to_message_id_ ~= 0 then
 if text and text:match("^تثبيت$") and ChCheck(msg) then 
 if DevAek:sismember(AEK.."Aek:Lock:Pinpin",msg.chat_id_) and not BasicConstructor(msg) then
@@ -5670,21 +5642,6 @@ text = text..""..k.."~ : `"..v.."`\n"
 end end
 if #List == 0 then 
 text = "❦ ⁞ *لا يوجد مدراء*"
-end
-Dev_Aek(msg.chat_id_, msg.id_, 1, text, 1, "md")
-end 
-if text == "المنظفين" and ChCheck(msg) then 
-local List = DevAek:smembers(AEK..'Aek:Cleaner:'..msg.chat_id_)
-text = "❦ ⁞ قائمة المنظفين ↫ ⤈ \n━───━ ❦ ━───━\n"
-for k,v in pairs(List) do
-local username = DevAek:get(AEK..'Save:UserName'..v)
-if username then
-text = text..""..k.."~ : [@"..username.."]\n"
-else
-text = text..""..k.."~ : `"..v.."`\n"
-end end
-if #List == 0 then 
-text = "❦ ⁞ *لا يوجد منظفين*"
 end
 Dev_Aek(msg.chat_id_, msg.id_, 1, text, 1, "md")
 end end 
@@ -6088,7 +6045,7 @@ if data.first_name_ == false then
 Dev_Aek(msg.chat_id_, msg.id_, 1,'❦ ⁞ الحساب محذوف', 1, 'md')
 return false  end
 if data.username_ == false then
-Text = '❦ ⁞ اسمه ↫ ['..CatchName(data.first_name_,20)..'](tg://user?id='..result.sender_user_id_..')\n❦ ⁞ ايديه ↫ ❨ `'..result.sender_user_id_..'` ❩\n❦ ⁞ رتبته ↫ '..IdRank(result.sender_user_id_, msg.chat_id_)..''..sudobot..'\n❦ ⁞ رسائله ↫ ❨ '..user_msgs..' ❩\n❦ ⁞ تفاعله ↫ '..formsgs(user_msgs)..''..CustomTitle..'\n❦ ⁞ نقاطه ↫ ❨ '..user_nkt..' ❩'..Tked
+Text = '❦ ⁞ اسمه ↫ ['..data.first_name_..'](tg://user?id='..result.sender_user_id_..')\n❦ ⁞ ايديه ↫ ❨ `'..result.sender_user_id_..'` ❩\n❦ ⁞ رتبته ↫ '..IdRank(result.sender_user_id_, msg.chat_id_)..''..sudobot..'\n❦ ⁞ رسائله ↫ ❨ '..user_msgs..' ❩\n❦ ⁞ تفاعله ↫ '..formsgs(user_msgs)..''..CustomTitle..'\n❦ ⁞ نقاطه ↫ ❨ '..user_nkt..' ❩'..Tked
 SendText(msg.chat_id_,Text,msg.id_/2097152/0.5,'md')
 else
 Dev_Aek(msg.chat_id_, msg.id_, 1,'❦ ⁞ معرفه ↫ [@'..data.username_..']\n❦ ⁞ ايديه ↫ ❨ `'..result.sender_user_id_..'` ❩\n❦ ⁞ رتبته ↫ '..IdRank(result.sender_user_id_, msg.chat_id_)..''..sudobot..'\n❦ ⁞ رسائله ↫ ❨ '..user_msgs..' ❩\n❦ ⁞ تفاعله ↫ '..formsgs(user_msgs)..''..CustomTitle..'\n❦ ⁞ نقاطه ↫ ❨ '..user_nkt..' ❩'..Tked, 1, 'md')
@@ -6196,7 +6153,7 @@ if data.first_name_ == false then
 Dev_Aek(msg.chat_id_, msg.id_, 1,'❦ ⁞ الحساب محذوف', 1, 'md')
 return false  end
 if data.username_ == false then
-Text = '❦ ⁞ اسمه ↫ ['..CatchName(data.first_name_,20)..'](tg://user?id='..iduser..')\n❦ ⁞ ايديه ↫ ❨ `'..iduser..'` ❩\n❦ ⁞ رتبته ↫ '..IdRank(data.id_, msg.chat_id_)..''..sudobot..'\n❦ ⁞ رسائله ↫ ❨ '..user_msgs..' ❩\n❦ ⁞ تفاعله ↫ '..formsgs(user_msgs)..''..CustomTitle..'\n❦ ⁞ نقاطه ↫ ❨ '..user_nkt..' ❩'..Tked
+Text = '❦ ⁞ اسمه ↫ ['..data.first_name_..'](tg://user?id='..result.sender_user_id_..')\n❦ ⁞ ايديه ↫ ❨ `'..result.sender_user_id_..'` ❩\n❦ ⁞ رتبته ↫ '..IdRank(result.sender_user_id_, msg.chat_id_)..''..sudobot..'\n❦ ⁞ رسائله ↫ ❨ '..user_msgs..' ❩\n❦ ⁞ تفاعله ↫ '..formsgs(user_msgs)..''..CustomTitle..'\n❦ ⁞ نقاطه ↫ ❨ '..user_nkt..' ❩'..Tked
 SendText(msg.chat_id_,Text,msg.id_/2097152/0.5,'md')
 else
 Dev_Aek(msg.chat_id_, msg.id_, 1,'❦ ⁞ معرفه ↫ [@'..data.username_..']\n❦ ⁞ ايديه ↫ ❨ `'..iduser..'` ❩\n❦ ⁞ رتبته ↫ '..IdRank(data.id_, msg.chat_id_)..''..sudobot..'\n❦ ⁞ رسائله ↫ ❨ '..user_msgs..' ❩\n❦ ⁞ تفاعله ↫ '..formsgs(user_msgs)..''..CustomTitle..'\n❦ ⁞ نقاطه ↫ ❨ '..user_nkt..' ❩'..Tked, 1, 'md')
@@ -6839,22 +6796,11 @@ if text and text == "المشتركين" and ChCheck(msg) or text and text == "�
 local users = DevAek:scard(AEK.."Aek:Users")
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ عدد المشتركين ↫ ❨ '..users..' ❩', 1, 'md')
 end
-end
---     Source AEK     --
 if text and text == 'المجموعات' and ChCheck(msg) or text and text == '↫ المجموعات ❦' then
-if not SudoBot(msg) then
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ للمطورين فقط ', 1, 'md')
-else
-local List = DevAek:smembers(AEK.."Aek:Groups")
-local t = '❦ ⁞ مجموعات البوت ↫ ⤈ \n'
-for k,v in pairs(List) do
-t = t..k.."~ : `"..v.."`\n" 
+local gps = DevAek:scard(AEK.."Aek:Groups")
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ عدد المجموعات ↫ ❨ '..gps..' ❩', 1, 'md')
 end
-if #List == 0 then
-t = '❦ ⁞ لا يوجد مجموعات مفعله'
 end
-Dev_Aek(msg.chat_id_, msg.id_, 1,t, 1, 'md')
-end end
 --     Source AEK     --
 if text and text:match('^تنظيف (%d+)$') and ChCheck(msg) then  
 if not DevAek:get(AEK..'Delete:Time'..msg.chat_id_..':'..msg.sender_user_id_) then  
@@ -6946,43 +6892,6 @@ end,nil)
 end
 return false
 end 
-end
---     Source AEK     --
-if text == "تفعيل امسح" and Constructor(msg) and ChCheck(msg) then
-local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تفعيل امسح بنجاح'
-Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
-DevAek:set(AEK..'Aek:Lock:Clean'..msg.chat_id_,true)  
-end
-if text == "تعطيل امسح" and Constructor(msg) and ChCheck(msg) then
-local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تعطيل امسح بنجاح'
-Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
-DevAek:del(AEK..'Aek:Lock:Clean'..msg.chat_id_) 
-end
-if Cleaner(msg) then
-if DevAek:get(AEK..'Aek:Lock:Clean'..msg.chat_id_) then 
-if text == "الميديا" and ChCheck(msg) or text == "عدد الميديا" and ChCheck(msg) then 
-local M = DevAek:scard(AEK.."Aek:cleaner"..msg.chat_id_)
-if M ~= 0 then
-Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ عدد الميديا ↫ "..M, 1, 'md') 
-else
-Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ لاتوجد ميديا هنا", 1, 'md') 
-end end
-if text == "امسح" and ChCheck(msg) or text == "تنظيف ميديا" and ChCheck(msg) or text == "تنظيف الميديا" and ChCheck(msg) then
-local List = DevAek:smembers(AEK.."Aek:cleaner"..msg.chat_id_)
-local Del = 0
-for k,v in pairs(List) do
-Del = (Del + 1)
-local Message = v
-DeleteMessage(msg.chat_id_,{[0]=Message})
-Message = Message - 1048576 
-end
-if Del ~= 0 then
-Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ تم حذف "..Del.." من الميديا", 1, 'md') 
-DevAek:del(AEK.."Aek:cleaner"..msg.chat_id_)
-else
-Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ لاتوجد ميديا هنا", 1, 'md') 
-end end 
-end
 end
 --     Source AEK     --
 if Admin(msg) then
@@ -7565,11 +7474,6 @@ local Text = text:match("^تغير رد المميز (.*)$")
 DevAek:set(AEK.."Aek:VipMem:Rd"..msg.chat_id_,Text)
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ تم تغير رد المميز الى ↫ "..Text, 1, 'md')
 end
-if text and text:match("^تغير رد المنظف (.*)$") and ChCheck(msg) then
-local Text = text:match("^تغير رد المنظف (.*)$") 
-DevAek:set(AEK.."Aek:Cleaner:Rd"..msg.chat_id_,Text)
-Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ تم تغير رد المنظف الى ↫ "..Text, 1, 'md')
-end
 if text and text:match("^تغير رد العضو (.*)$") and ChCheck(msg) then
 local Text = text:match("^تغير رد العضو (.*)$") 
 DevAek:set(AEK.."Aek:mem:Rd"..msg.chat_id_,Text)
@@ -7691,10 +7595,6 @@ if Constructor(msg) then
 if txts[2] == 'المدراء' or txtss[2] == 'المدراء' then
 ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم حذف المدراء")  
 DevAek:del(AEK..'Aek:Managers:'..msg.chat_id_)
-end 
-if txts[2] == 'المنظفين' or txtss[2] == 'المنظفين' then
-ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم حذف المنظفين")  
-DevAek:del(AEK..'Aek:Cleaner:'..msg.chat_id_)
 end end
 if Manager(msg) then
 if txts[2] == 'الادمنيه' or txtss[2] == 'الادمنيه' then
@@ -7914,6 +7814,17 @@ end
 if text and text:match("^القوانين$") then
 local rules = DevAek:get(AEK..'Aek:rules'..msg.chat_id_)
 Dev_Aek(msg.chat_id_, msg.id_, 1, rules, 1, nil)
+end
+--     Source AEK     --
+if text == 'رقمي' then
+tdcli_function({ID="GetUser",user_id_=msg.sender_user_id_},function(extra,result,success)
+if result.phone_number_  then
+MyNumber = "❦ ⁞رقمك ↫ +"..result.phone_number_
+else
+MyNumber = "❦ ⁞تم وضع رقمك لجهات اتصالك فقط"
+end
+send(msg.chat_id_, msg.id_,MyNumber)
+end,nil)
 end
 --     Source AEK     --
 if text == "تفعيل الزخرفه" and Manager(msg) and ChCheck(msg) then
@@ -8187,6 +8098,17 @@ if text == 'تعطيل اوامر التحشيش' and Manager(msg) and ChCheck(m
 local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تعطيل اوامر التحشيش'
 Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
 DevAek:set(AEK..'Aek:Lock:Stupid'..msg.chat_id_,true)
+end
+--     Source AEK     --
+if text and (text == 'تعطيل التحقق' or text == 'قفل التحقق' or text == 'تعطيل تنبيه الدخول') and Manager(msg) and ChCheck(msg) then 
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تعطيل التحقق بنجاح'
+Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
+DevAek:del(AEK..'Aek:Lock:Robot'..msg.chat_id_)
+end
+if text and (text == 'تفعيل التحقق' or text == 'فتح التحقق' or text == 'تفعيل تنبيه الدخول') and Manager(msg) and ChCheck(msg) then 
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تفعيل التحقق بنجاح'
+Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
+DevAek:set(AEK..'Aek:Lock:Robot'..msg.chat_id_,true)
 end
 --     Source AEK     --
 if text == 'تفعيل ردود المدير' and Manager(msg) and ChCheck(msg) then 
@@ -9331,7 +9253,7 @@ local text =  [[
 ❦ ⁞ تغير رد + اسم الرتبه + النص ↫ ⤈
 ❦ ⁞ المطور • منشئ الاساسي
 ❦ ⁞ المنشئ • المدير • الادمن
-❦ ⁞ المميز • المنظف • العضو
+❦ ⁞ المميز • العضو
 ❦ ⁞ حذف ردود الرتب
 ━───━ ❦ ━───━
 ❦ ⁞ تغيير الايدي ↫ لتغيير الكليشه
@@ -9342,7 +9264,7 @@ local text =  [[
 ❦ ⁞ اطردني • الايدي بالصوره • الابراج
 ❦ ⁞ معاني الاسماء • اوامر النسب • التوحيد
 ❦ ⁞ الايدي • تحويل الصيغ • اوامر التحشيش
-❦ ⁞ ردود المدير • ردود المطور
+❦ ⁞ ردود المدير • ردود المطور • التحقق
 ❦ ⁞ ضافني • حساب العمر • الزخرفه
 ━───━ ❦ ━───━
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
@@ -9371,18 +9293,15 @@ local text =  [[
 ❦ ⁞ اوامر المنشئين ↫ ⤈
 ━───━ ❦ ━───━
 ❦ ⁞ تنزيل الكل
-❦ ⁞ الميديا • امسح
 ❦ ⁞ اضف • حذف ↫ امر
 ❦ ⁞ حذف الاوامر المضافه
 ❦ ⁞ الاوامر المضافه
 ❦ ⁞ اضف نقاط ↫ بالرد • بالايدي
 ❦ ⁞ اضف رسائل ↫ بالرد • بالايدي
-❦ ⁞ رفع منظف • تنزيل منظف
-❦ ⁞ المنظفين • حذف المنظفين
 ❦ ⁞ رفع مدير • تنزيل مدير
 ❦ ⁞ المدراء • حذف المدراء
 ❦ ⁞ تفعيل • تعطيل + الامر ↫ ⤈
-❦ ⁞ نزلني • امسح
+❦ ⁞ نزلني
 ❦ ⁞ الحظر • الكتم
 ❦ ⁞ كتم الاسم
 ━───━ ❦ ━───━
@@ -9516,7 +9435,7 @@ local text =  [[
 ❦ ⁞ نقاطي • بيع نقاطي • القوانين • زخرفه 
 ❦ ⁞ رابط الحذف • نزلني • اطردني • المطور 
 ❦ ⁞ منو ضافني • مشاهدات المنشور • الرابط 
-❦ ⁞ ايدي المجموعه • معلومات المجموعه 
+❦ ⁞ رقمي • ايدي المجموعه • معلومات المجموعه 
 ❦ ⁞ نسبه الحب • نسبه الكره • نسبه الغباء 
 ❦ ⁞ نسبه الرجوله • نسبه الانوثه • التفاعل
 ━───━ ❦ ━───━
@@ -9542,7 +9461,7 @@ end
 --     Source AEK     --
 if SecondSudo(msg) then
 if text == "تحديث السورس" or text == "تحديث سورس" then 
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ جاري تحديث سورس ايكان', 1, 'md') 
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ جاري تحديث سورس ايك', 1, 'md') 
 os.execute('rm -rf AEK.lua') 
 os.execute('wget https://raw.githubusercontent.com/AEKANO/AEK/master/AEK.lua') 
 dofile('AEK.lua') 
@@ -9555,67 +9474,12 @@ dofile('AEK.lua')
 io.popen("rm -rf ../.telegram-cli/*")
 print("\27[31;47m\n        ( تم تحديث ملفات البوت )        \n\27[0;34;49m\n") 
 Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ تم تحديث ملفات البوت", 1, "md")
-end 
-if text == 'تصحيح الاخطاء' then
-if not DevAek:get(AEK..'Aek:Errors') then
-DevAek:set(AEK..'Aek:Errors',true)
-send(msg.chat_id_, msg.id_,'❦ ⁞ تم تصحيح اخطاء التحديث القديم')
-local Create = function(data, file, uglify)  
-file = io.open(file, "w+")   
-local serialized   
-if not uglify then  
-serialized = serpent.block(data, {comment = false, name = "Config"})  
-else  
-serialized = serpent.dump(data)  
-end    
-file:write(serialized)
-file:close()  
 end
-Config = {
-DevId = DevId,
-TokenBot = TokenBot,
-AEK = TokenBot:match("(%d+)"),
-SudoIds = {DevId},
-}
-Create(Config, "./config.lua")   
-file = io.open("AEK.sh", "w")  
-file:write([[
-#!/usr/bin/env bash
-cd $HOME/AEK
-token="]]..TokenBot..[["
-while(true) do
-rm -fr ../.telegram-cli
-if [ ! -f ./tg ]; then
-echo "━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━"
-echo "~ The tg File Was Not Found In The Bot Files"
-echo "━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━"
-exit 1
-fi
-if [ ! $token ]; then
-echo "━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━"
-echo "~ The Token Was Not Found In The config.lua File"
-echo "━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━ ❦ ━───━"
-exit 1
-fi
-./tg -s ./AEK.lua -p PROFILE --bot=$token
-done
-]])  
-file:close()  
-file = io.open("Run", "w")  
-file:write([[
-#!/usr/bin/env bash
-cd $HOME/AEK
-while(true) do
-rm -fr ../.telegram-cli
-screen -S AEK -X kill
-screen -S AEK ./AEK.sh
-done
-]]) 
-file:close() 
-os.execute('unlink RUNAEK.sh;unlink AEK;chmod +x AEK.sh;chmod +x Run;./Run')
-else
-send(msg.chat_id_, msg.id_,'❦ ⁞ لديك اخر نسخه من التحديث لاتوجد اخطاء')
-end
+if msg and not DevAek:get(AEK..'Aek:Update') then
+DevAek:set(AEK..'Aek:Update',true)
+os.execute('unlink JSON.lua && unlink dkjson.lua')
+os.execute('git clone https://github.com/AEKANO/libs') 
+dofile('AEK.lua') 
 end
 --     Source AEK     --
 if text == 'الملفات' then
@@ -9833,7 +9697,7 @@ elseif result.content_.ID == "MessageVideo" then Media = 'الفيديو'
 elseif result.content_.ID == "MessageAnimation" then Media = 'المتحركه'
 end
 tdcli_function ({ID = "GetUser",user_id_ = result.sender_user_id_},function(arg,dp) 
-local Aekname = '❦ ⁞ العضو ↫ ['..CatchName(dp.first_name_,15)..'](tg://user?id='..dp.id_..')'
+local Aekname = '❦ ⁞ العضو ↫ ['..dp.first_name_..'](tg://user?id='..dp.id_..')'
 local Aekid = '❦ ⁞ ايديه ↫ `'..dp.id_..'`'
 local Aektext = '❦ ⁞ قام بالتعديل على '..Media
 local Aektxt = '━───━ ❦ ━───━\n❦ ⁞ تعالو يامشرفين اكو مخرب'
