@@ -7925,18 +7925,18 @@ local txt = {string.match(text, "^(كول) (.*)$")}
 Dev_Aek(msg.chat_id_,0, 1, txt[2], 1, 'md')
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 end
-if text == "تفعيل انطق" and Manager(msg) and ChCheck(msg) then
-local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تفعيل ميزة انطق'
+if text == "تفعيل نطقي" and Manager(msg) and ChCheck(msg) then
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تفعيل ميزة نطقي'
 Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
 DevAek:del(AEK..'Aek:Antk:Aek'..msg.chat_id_) 
 end
-if text == "تعطيل انطق" and Manager(msg) and ChCheck(msg) then
-local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تعطيل ميزة انطق'
+if text == "تعطيل نطقي" and Manager(msg) and ChCheck(msg) then
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تعطيل ميزة نطقي'
 Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
 DevAek:set(AEK..'Aek:Antk:Aek'..msg.chat_id_,true)  
 end
-if text and text:match("^انطق (.*)$") and not DevAek:get(AEK..'Aek:Antk:Aek'..msg.chat_id_) then
-local UrlAntk = https.request('https://apiabs.ml/Antk.php?abs='..URL.escape(text:match("^انطق (.*)$")))
+if text and text:match("^نطقي (.*)$") and ChCheck(msg) and not DevAek:get(AEK..'Aek:Antk:Aek'..msg.chat_id_) then
+local UrlAntk = https.request('https://apiabs.ml/Antk.php?abs='..URL.escape(text:match("^نطقي (.*)$")))
 Antk = JSON.decode(UrlAntk)
 if UrlAntk.ok ~= false then
 download_to_file("https://translate"..Antk.result.google..Antk.result.code.."UTF-8"..Antk.result.utf..Antk.result.translate.."&tl=ar-IN",Antk.result.translate..'.mp3') 
@@ -9414,7 +9414,7 @@ local text =  [[
 ❦ ⁞ اطردني • الايدي بالصوره • الابراج
 ❦ ⁞ معاني الاسماء • اوامر النسب • التوحيد
 ❦ ⁞ الايدي • تحويل الصيغ • اوامر التحشيش
-❦ ⁞ ردود المدير • ردود المطور • التحقق
+❦ ⁞ ردود المدير • ردود المطور • التحقق • نطقي
 ❦ ⁞ ضافني • حساب العمر • الزخرفه
 ━───━ ❦ ━───━
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
@@ -9606,7 +9606,7 @@ local text =  [[
 ❦ ⁞ صلاحياته ↫ بالرد • بالمعرف • بالايدي
 ❦ ⁞ ايدي • كشف  ↫ بالرد • بالمعرف • بالايدي
 ❦ ⁞ تحويل + بالرد ↫ صوره • ملصق • صوت • بصمه
-❦ ⁞ انطق + الكلام تدعم جميع اللغات مع الترجمه للعربي
+❦ ⁞ نطقي + الكلام تدعم جميع اللغات مع الترجمه للعربي
 ━───━ ❦ ━───━
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
 ]]
