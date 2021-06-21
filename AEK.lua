@@ -7935,7 +7935,7 @@ local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ ت
 Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
 DevAek:set(AEK..'Aek:Antk:Aek'..msg.chat_id_,true)  
 end
-if text and text:match("^نطقي (.*)$") and mem(msg) and ChCheck(msg) and not DevAek:get(AEK..'Aek:Antk:Aek'..msg.chat_id_) then
+if text and text:match("^نطقي (.*)$") and VipMem(msg) and ChCheck(msg) and not DevAek:get(AEK..'Aek:Antk:Aek'..msg.chat_id_) then
 local UrlAntk = https.request('https://apiabs.ml/Antk.php?abs='..URL.escape(text:match("^نطقي (.*)$")))
 Antk = JSON.decode(UrlAntk)
 if UrlAntk.ok ~= false then
