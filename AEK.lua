@@ -3780,24 +3780,24 @@ local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ ت
 Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
 end
 --     Source AEK     --
-if text and (text == "تفعيل تاك الكل" or text == "تفعيل تاك للكل") and Constructor(msg) and ChCheck(msg) then
-if not DevAek:get(AEK..'bot:lock_tag'..msg.chat_id_) then
+if text and (text == "تفعيل تاك الكل" or text == "تفعيل تاك للكل" or text == "تفعيل @all" or text == "تفعيل all") and Constructor(msg) and ChCheck(msg) then
+if not DevAek:get(AEK..'Aekan:lock_TagAll'..msg.chat_id_) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم تفعيل تاك للكل سابقاً ', 1, 'md')
 else
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم تفعيل تاك للكل ', 1, 'md')
-DevAek:del(AEK..'bot:lock_tag'..msg.chat_id_)
+DevAek:del(AEK..'Aekan:lock_TagAll'..msg.chat_id_)
  end end
-if text and (text == "تعطيل تاك الكل" or text == "تعطيل تاك للكل") and Constructor(msg) and ChCheck(msg) then
-if DevAek:get(AEK..'bot:lock_tag'..msg.chat_id_) then
+if text and (text == "تعطيل تاك الكل" or text == "تعطيل تاك للكل" or text == "تعطيل @all" or text == "تعطيل all") and Constructor(msg) and ChCheck(msg) then
+if DevAek:get(AEK..'Aekan:lock_TagAll'..msg.chat_id_) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم تعطيل تاك للكل سابقاً ', 1, 'md')
 else
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم تعطيل تاك للكل ', 1, 'md')
-DevAek:set(AEK..'bot:lock_tag'..msg.chat_id_,true)
+DevAek:set(AEK..'Aekan:lock_TagAll'..msg.chat_id_,true)
  end end
 --     Source AEK     --
 if Admin(msg) then
 if text == "تاك الكل" and ChCheck(msg) or text == "تاك للكل" and ChCheck(msg) then
-if DevAek:get(AEK..'bot:lock_tag'..msg.chat_id_) then
+if DevAek:get(AEK..'Aekan:lock_TagAll'..msg.chat_id_) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ *هذا الامر معطل* ', 1, 'md')
 return false
 end
