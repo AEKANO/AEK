@@ -318,6 +318,16 @@ return false
 end  
 end
 --     Source AEK     --
+--------- Cleaner ----------
+function Cleaner(msg) 
+local Status = DevAek:sismember(AEK..'Aek:Cleaner:'..msg.chat_id_,msg.sender_user_id_) 
+if Status or SudoBot(msg) or AekConstructor(msg) or BasicConstructor(msg) or Constructor(msg) or Sudo(msg) or SecondSudo(msg) or Bot(msg) then  
+return true  
+else  
+return false  
+end  
+end
+--     Source AEK     --
 ---------  Banned  ---------
 local function Ban(user_id, chat_id)
 if DevAek:sismember(AEK..'Aek:Ban:'..chat_id, user_id) then
@@ -2937,7 +2947,7 @@ name = string.gsub(name,'🎺','🎺')
 name = string.gsub(name,'🥁','🥁')
 name = string.gsub(name,'🎹','🎹')
 name = string.gsub(name,'🎼','🎼')
-name = string.gsub(name,'🎧','🎧')
+name = string.gsub(name,'??','🎧')
 name = string.gsub(name,'🎤','🎤')
 name = string.gsub(name,'🎬','🎬')
 name = string.gsub(name,'🎨','🎨')
@@ -4714,6 +4724,60 @@ if text and text:match('^تنزيل مدير (%d+)') and ChCheck(msg) then
 local user = text:match('تنزيل مدير (%d+)')
 DevAek:srem(AEK..'Aek:Managers:'..msg.chat_id_,user)
 ReplyStatus(msg,user,"Reply","❦ ⁞ تم تنزيله من قائمة المدراء")  
+end
+--     Source AEK     --
+--       Set Cleaner      --
+if text ==('رفع منظف') and ChCheck(msg) then
+function prom_reply(extra, result, success)
+DevAek:sadd(AEK..'Aek:Cleaner:'..msg.chat_id_,result.sender_user_id_)
+ReplyStatus(msg,result.sender_user_id_,"Reply","❦ ⁞ تم رفعه في قائمة المنظفين")  
+end 
+if tonumber(tonumber(msg.reply_to_message_id_)) == 0 then
+else
+getMessage(msg.chat_id_, tonumber(msg.reply_to_message_id_),prom_reply)
+end end
+if text and text:match('^رفع منظف @(.*)') and ChCheck(msg) then
+local username = text:match('^رفع منظف @(.*)')
+function promreply(extra,result,success)
+if result.id_ then
+DevAek:sadd(AEK..'Aek:Cleaner:'..msg.chat_id_,result.id_)
+ReplyStatus(msg,result.id_,"Reply","❦ ⁞ تم رفعه في قائمة المنظفين")  
+else 
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ *المعرف غير صحيح*', 1, 'md')
+end end 
+resolve_username(username,promreply)
+end
+if text and text:match('^رفع منظف (%d+)') and ChCheck(msg) then
+local user = text:match('رفع منظف (%d+)')
+DevAek:sadd(AEK..'Aek:Cleaner:'..msg.chat_id_,user)
+ReplyStatus(msg,user,"Reply","❦ ⁞ تم رفعه في قائمة المنظفين")  
+end
+--     Source AEK     --
+--       Rem Cleaner      --
+if text ==('تنزيل منظف') and ChCheck(msg) then
+function prom_reply(extra, result, success)
+DevAek:srem(AEK..'Aek:Cleaner:'..msg.chat_id_,result.sender_user_id_)
+ReplyStatus(msg,result.sender_user_id_,"Reply","❦ ⁞ تم تنزيله من قائمة المنظفين")  
+end 
+if tonumber(tonumber(msg.reply_to_message_id_)) == 0 then
+else
+getMessage(msg.chat_id_, tonumber(msg.reply_to_message_id_),prom_reply)
+end end
+if text and text:match('^تنزيل منظف @(.*)') and ChCheck(msg) then
+local username = text:match('^تنزيل منظف @(.*)')
+function promreply(extra,result,success)
+if result.id_ then
+DevAek:srem(AEK..'Aek:Cleaner:'..msg.chat_id_,result.id_)
+ReplyStatus(msg,result.id_,"Reply","❦ ⁞ تم تنزيله من قائمة المنظفين")  
+else 
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ *المعرف غير صحيح*', 1, 'md')
+end end 
+resolve_username(username,promreply)
+end
+if text and text:match('^تنزيل منظف (%d+)') and ChCheck(msg) then
+local user = text:match('تنزيل منظف (%d+)')
+DevAek:srem(AEK..'Aek:Cleaner:'..msg.chat_id_,user)
+ReplyStatus(msg,user,"Reply","❦ ⁞ تم تنزيله من قائمة المنظفين")  
 end end
 --     Source AEK     --
 --       Set admin        --
@@ -5673,6 +5737,7 @@ end
 tdcli_function ({ID = "GetMessage",chat_id_=msg.chat_id_,message_id_=tonumber(msg.reply_to_message_id_)},Reply, nil)
 return false
 end
+if DevAek:get(AEK..'Aek:Lock:Clean'..msg.chat_id_) then if msg.content_.video_ or msg.content_.document_ or msg.content_.sticker_ or msg.content_.photo_ or msg.content_.animation_ then if msg.reply_to_message_id_ ~= 0 then DevAek:sadd(AEK.."Aek:cleaner"..msg.chat_id_, msg.id_) else DevAek:sadd(AEK.."Aek:cleaner"..msg.chat_id_, msg.id_) end end end
 if Manager(msg) and msg.reply_to_message_id_ ~= 0 then
 if text and text:match("^تثبيت$") and ChCheck(msg) then 
 if DevAek:sismember(AEK.."Aek:Lock:Pinpin",msg.chat_id_) and not BasicConstructor(msg) then
@@ -5746,6 +5811,21 @@ text = text..""..k.."~ : `"..v.."`\n"
 end end
 if #List == 0 then 
 text = "❦ ⁞ *لا يوجد مدراء*"
+end
+Dev_Aek(msg.chat_id_, msg.id_, 1, text, 1, "md")
+end
+ if text == "المنظفين" and ChCheck(msg) then 
+local List = DevAek:smembers(AEK..'Aek:Cleaner:'..msg.chat_id_)
+text = "❦ ⁞ قائمة المنظفين ↫ ⤈ \n━───━ ❦ ━───━\n"
+for k,v in pairs(List) do
+local username = DevAek:get(AEK..'Save:UserName'..v)
+if username then
+text = text..""..k.."~ : [@"..username.."]\n"
+else
+text = text..""..k.."~ : `"..v.."`\n"
+end end
+if #List == 0 then 
+text = "❦ ⁞ *لا يوجد منظفين*"
 end
 Dev_Aek(msg.chat_id_, msg.id_, 1, text, 1, "md")
 end end 
@@ -7011,6 +7091,64 @@ end,nil)
 end
 return false
 end 
+end
+--     Source AEK     --
+if text and (text == "تفعيل امسح" or text == "تفعيل المسح التلقائي" or text == "تفعيل الحذف التلقائي") and Constructor(msg) and ChCheck(msg) then
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تفعيل امسح مع ميزة الحذف التلقائي للميديا'
+Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
+DevAek:set(AEK..'Aek:Lock:Clean'..msg.chat_id_,true)  
+end
+if text and (text == "تعطيل امسح" or text == "تعطيل المسح التلقائي" or text == "تعطيل الحذف التلقائي") and Constructor(msg) and ChCheck(msg) then
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تعطيل امسح مع ميزة الحذف التلقائي للميديا'
+Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
+DevAek:del(AEK..'Aek:Lock:Clean'..msg.chat_id_) 
+end
+if text and (text:match("^تعين عدد المسح (%d+)$") or text:match("^تعيين عدد المسح (%d+)$") or text:match("^تعين عدد الحذف (%d+)$") or text:match("^تعيين عدد الحذف (%d+)$")) and Constructor(msg) then   
+local Num = text:match("تعين عدد المسح (%d+)$") or text:match("تعيين عدد المسح (%d+)$") or text:match("تعين عدد الحذف (%d+)$") or text:match("تعيين عدد الحذف (%d+)$")
+if tonumber(Num) < 50 or tonumber(Num) > 200 then
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ قم بتحديد عدد اكبر من 50 واصغر من 200 للحذف التلقائي', 1, 'md')
+else
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ تم وضع ↫ *'..Num..'* من الميديا للحذف التلقائي', 1, 'md')
+DevAek:set(AEK..'Aek:CleanNum'..msg.chat_id_,Num) 
+end end 
+if msg and DevAek:get(AEK..'Aek:Lock:Clean'..msg.chat_id_) then
+if DevAek:get(AEK..'Aek:CleanNum'..msg.chat_id_) then CleanNum = DevAek:get(AEK..'Aek:CleanNum'..msg.chat_id_) else CleanNum = 200 end
+if DevAek:scard(AEK.."Aek:cleaner"..msg.chat_id_) >= tonumber(CleanNum) then 
+local List = DevAek:smembers(AEK.."Aek:cleaner"..msg.chat_id_)
+local Del = 0
+for k,v in pairs(List) do
+Del = (Del + 1)
+local Message = v
+DeleteMessage(msg.chat_id_,{[0]=Message})
+end
+SendText(msg.chat_id_,"❦ ⁞ تم حذف "..Del.." من الميديا تلقائيا",0,'md') 
+DevAek:del(AEK.."Aek:cleaner"..msg.chat_id_)
+end 
+end 
+if Cleaner(msg) then
+if DevAek:get(AEK..'Aek:Lock:Clean'..msg.chat_id_) then 
+if text == "الميديا" and ChCheck(msg) or text == "عدد الميديا" and ChCheck(msg) then 
+local M = DevAek:scard(AEK.."Aek:cleaner"..msg.chat_id_)
+if M ~= 0 then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ عدد الميديا ↫ "..M.."\n❦ ⁞ الحذف التلقائي ↫ "..(DevAek:get(AEK..'Aek:CleanNum'..msg.chat_id_) or 200), 1, 'md') 
+else
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ لاتوجد ميديا هنا", 1, 'md') 
+end end
+if text == "امسح" and ChCheck(msg) or text == "احذف" and ChCheck(msg) or text == "تنظيف ميديا" and ChCheck(msg) or text == "تنظيف الميديا" and ChCheck(msg) then
+local List = DevAek:smembers(AEK.."Aek:cleaner"..msg.chat_id_)
+local Del = 0
+for k,v in pairs(List) do
+Del = (Del + 1)
+local Message = v
+DeleteMessage(msg.chat_id_,{[0]=Message})
+end
+if Del ~= 0 then
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ تم حذف "..Del.." من الميديا", 1, 'md') 
+DevAek:del(AEK.."Aek:cleaner"..msg.chat_id_)
+else
+Dev_Aek(msg.chat_id_, msg.id_, 1, "❦ ⁞ لاتوجد ميديا هنا", 1, 'md') 
+end end 
+end
 end
 --     Source AEK     --
 if Admin(msg) then
