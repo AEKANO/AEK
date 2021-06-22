@@ -7864,6 +7864,10 @@ if Constructor(msg) then
 if txts[2] == 'المدراء' or txtss[2] == 'المدراء' then
 ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم حذف المدراء")  
 DevAek:del(AEK..'Aek:Managers:'..msg.chat_id_)
+end
+if txts[2] == 'المنظفين' or txtss[2] == 'المنظفين' then
+ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم حذف المنظفين")  
+DevAek:del(AEK..'Aek:Cleaner:'..msg.chat_id_)
 end end
 if Manager(msg) then
 if txts[2] == 'الادمنيه' or txtss[2] == 'الادمنيه' then
