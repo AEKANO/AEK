@@ -494,10 +494,6 @@ username_ = username
 }, cb, nil)
 end
 --     Source AEK     --
-function changeChatMemberStatus(chat_id, user_id, status)
-tdcli_function ({ ID = "ChangeChatMemberStatus", chat_id_ = chat_id, user_id_ = user_id, status_ = { ID = "ChatMemberStatus" .. status }, }, dl_cb, nil)
-end
---     Source AEK     --
 function getInputFile(file)
 if file:match('/') then
 infile = {ID = "InputFileLocal", path_ = file}
@@ -523,11 +519,11 @@ return chat
 end
 --     Source AEK     --
 function ChatLeave(chat_id, user_id)
-changeChatMemberStatus(chat_id, user_id, "Left")
+tdcli_function ({ ID = "ChangeChatMemberStatus", chat_id_ = chat_id, user_id_ = user_id, status_ = { ID = "ChatMemberStatusLeft" }, }, dl_cb, nil)
 end
 --     Source AEK     --
 function ChatKick(chat_id, user_id)
-changeChatMemberStatus(chat_id, user_id, "Kicked")
+tdcli_function ({ ID = "ChangeChatMemberStatus", chat_id_ = chat_id, user_id_ = user_id, status_ = { ID = "ChatMemberStatusKicked" }, }, dl_cb, nil)
 end
 --     Source AEK     --
 function getParseMode(parse_mode)
@@ -614,8 +610,8 @@ vardump(data)
 end ,nil) 
 end
 --     Source AEK     --
-local AekRank = function(msg) if SudoId(msg.sender_user_id_) then AEKTEAM  = "المطور" elseif SecondSudo(msg) then AEKTEAM = "المطور" elseif SudoBot(msg) then AEKTEAM = "المطور" elseif ManagerAll(msg) then AEKTEAM = "المدير" elseif AdminAll(msg) then AEKTEAM = "الادمن" elseif AekConstructor(msg) then AEKTEAM = "المالك" elseif BasicConstructor(msg) then AEKTEAM = "المنشئ الأساسي" elseif Constructor(msg) then AEKTEAM = "المنشئ" elseif Manager(msg) then AEKTEAM = "المدير" elseif Admin(msg) then AEKTEAM = "الادمن" else AEKTEAM = "العضو" end return AEKTEAM end
-function IdRank(user_id,chat_id) if tonumber(user_id) == tonumber(152221858) then AEKTEAM = 'مبرمج السورس' elseif tonumber(user_id) == tonumber(AEK) then AEKTEAM = 'البوت' elseif SudoId(user_id) then AEKTEAM = 'المطور الاساسي' elseif DevAek:sismember(AEK..'Aek:SecondSudo:', user_id) then AEKTEAM = 'المطور الثانوي' elseif DevAek:sismember(AEK..'Aek:SudoBot:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:SudoBot:Rd"..chat_id) or 'المطور' elseif DevAek:sismember(AEK..'Aek:ManagerAll:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Managers:Rd"..chat_id) or 'المدير العام' elseif DevAek:sismember(AEK..'Aek:AdminAll:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Admins:Rd"..chat_id) or 'الادمن العام' elseif DevAek:sismember(AEK..'Aek:VipAll:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:VipMem:Rd"..chat_id) or 'المميز العام' elseif DevAek:sismember(AEK..'Aek:AekConstructor:'..chat_id, user_id) then AEKTEAM = 'المالك' elseif DevAek:sismember(AEK..'Aek:BasicConstructor:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:BasicConstructor:Rd"..chat_id) or 'المنشئ الاساسي' elseif DevAek:sismember(AEK..'Aek:Constructor:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Constructor:Rd"..chat_id) or 'المنشئ' elseif DevAek:sismember(AEK..'Aek:Managers:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Managers:Rd"..chat_id) or 'المدير' elseif DevAek:sismember(AEK..'Aek:Admins:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Admins:Rd"..chat_id) or 'الادمن' elseif DevAek:sismember(AEK..'Aek:VipMem:'..chat_id, user_id) then  AEKTEAM = DevAek:get(AEK.."Aek:VipMem:Rd"..chat_id) or 'المميز' elseif DevAek:sismember(AEK..'Aek:Cleaner:'..chat_id, user_id) then  AEKTEAM = DevAek:get(AEK.."Aek:Cleaner:Rd"..chat_id) or 'المنظف' else AEKTEAM = DevAek:get(AEK.."Aek:mem:Rd"..chat_id) or 'العضو' end return AEKTEAM end
+local AekRank = function(msg) if SudoId(msg.sender_user_id_) then AEKTEAM  = "المطور" elseif SecondSudo(msg) then AEKTEAM = "المطور الثانوي" elseif SudoBot(msg) then AEKTEAM = "المطور" elseif ManagerAll(msg) then AEKTEAM = "المدير العام" elseif AdminAll(msg) then AEKTEAM = "الادمن العام" elseif AekConstructor(msg) then AEKTEAM = "المالك" elseif BasicConstructor(msg) then AEKTEAM = "المنشئ الأساسي" elseif Constructor(msg) then AEKTEAM = "المنشئ" elseif Manager(msg) then AEKTEAM = "المدير" elseif Admin(msg) then AEKTEAM = "الادمن" else AEKTEAM = "العضو" end return AEKTEAM end
+function IdRank(user_id,chat_id) if tonumber(user_id) == tonumber(152221858) then AEKTEAM = 'مبرمج السورس' elseif tonumber(user_id) == tonumber(1806269734) then AEKTEAM = 'مجنونة ايكو' elseif tonumber(user_id) == tonumber(AEK) then AEKTEAM = 'البوت' elseif SudoId(user_id) then AEKTEAM = 'المطور الاساسي' elseif DevAek:sismember(AEK..'Aek:SecondSudo:', user_id) then AEKTEAM = 'المطور الثانوي' elseif DevAek:sismember(AEK..'Aek:SudoBot:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:SudoBot:Rd"..chat_id) or 'المطور' elseif DevAek:sismember(AEK..'Aek:ManagerAll:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Managers:Rd"..chat_id) or 'المدير العام' elseif DevAek:sismember(AEK..'Aek:AdminAll:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Admins:Rd"..chat_id) or 'الادمن العام' elseif DevAek:sismember(AEK..'Aek:VipAll:', user_id) then AEKTEAM = DevAek:get(AEK.."Aek:VipMem:Rd"..chat_id) or 'المميز العام' elseif DevAek:sismember(AEK..'Aek:AekConstructor:'..chat_id, user_id) then AEKTEAM = 'المالك' elseif DevAek:sismember(AEK..'Aek:BasicConstructor:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:BasicConstructor:Rd"..chat_id) or 'المنشئ الاساسي' elseif DevAek:sismember(AEK..'Aek:Constructor:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Constructor:Rd"..chat_id) or 'المنشئ' elseif DevAek:sismember(AEK..'Aek:Managers:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Managers:Rd"..chat_id) or 'المدير' elseif DevAek:sismember(AEK..'Aek:Admins:'..chat_id, user_id) then AEKTEAM = DevAek:get(AEK.."Aek:Admins:Rd"..chat_id) or 'الادمن' elseif DevAek:sismember(AEK..'Aek:VipMem:'..chat_id, user_id) then  AEKTEAM = DevAek:get(AEK.."Aek:VipMem:Rd"..chat_id) or 'المميز' elseif DevAek:sismember(AEK..'Aek:Cleaner:'..chat_id, user_id) then  AEKTEAM = DevAek:get(AEK.."Aek:Cleaner:Rd"..chat_id) or 'المنظف' else AEKTEAM = DevAek:get(AEK.."Aek:mem:Rd"..chat_id) or 'العضو' end return AEKTEAM end
 --     Source AEK     --
 function RankChecking(user_id,chat_id)
 if SudoId(user_id) then
@@ -1075,7 +1071,6 @@ local Text = [[
 ❦ ⁞ قفل • فتح ↫ التكرار
 ❦ ⁞ قفل • فتح ↫ الهاشتاك
 ❦ ⁞ قفل • فتح ↫ التعديل
-❦ ⁞ قفل • فتح ↫ الاباحي
 ❦ ⁞ قفل • فتح ↫ التثبيت
 ❦ ⁞ قفل • فتح ↫ الاشعارات
 ❦ ⁞ قفل • فتح ↫ الكلايش
@@ -1231,7 +1226,7 @@ local Text = [[
 ❦ ⁞ معاني الاسماء • اوامر النسب • التوحيد
 ❦ ⁞ الايدي • تحويل الصيغ • اوامر التحشيش
 ❦ ⁞ ردود المدير • ردود المطور • التحقق • نطقي
-❦ ⁞ ضافني • حساب العمر • الزخرفه
+ ❦ ⁞ ضافني • حساب العمر • الزخرفه • غنيلي
 ━───━ ❦ ━───━
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
 ]]
@@ -2082,6 +2077,11 @@ Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ لا تستطيع تفعيل هذه �
 end 
 end 
 --     Source AEK     --
+if msg.date_ and msg.date_ < tonumber(os.time() - 30) then
+print("*( OLD MESSAGE )*")
+return false
+end
+--     Source AEK     --
 tdcli_function({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,data) 
 if data.username_ ~= false then
 DevAek:set(AEK..'Save:UserName'..msg.sender_user_id_,data.username_)
@@ -2145,40 +2145,6 @@ ReplyStatus(msg,msg.sender_user_id_,"WrongWay","❦ ⁞ الملصق الذي ا
 DeleteMessage(msg.chat_id_,{[0] = msg.id_})
 return false   
 end
-end
-end
-end
-if msg.content_.ID == "MessagePhoto" or msg.content_.ID == "MessageSticker" then
-if DevAek:get(AEK..'Aek:Lock:NightClub'..msg.chat_id_) and msg.reply_to_message_id_ == 0 then
-if msg.content_.ID == "MessagePhoto" then Media = 'صوره اباحيه' UrlId = msg.content_.photo_.sizes_[1].photo_.persistent_id_
-elseif msg.content_.ID == "MessageSticker" then Media = 'ملصق اباحي' UrlId = msg.content_.sticker_.sticker_.persistent_id_
-end
-HttpsMsg = https.request('https://apiabs.ml/nightclub.php?Get=AEK&TokenBot='..TokenBot..'&Url='..UrlId)
-EndMsg = JSON.decode(HttpsMsg)
-if EndMsg.Result.Info == "Indecent" then
-DeleteMessage(msg.chat_id_,{[0] = msg.id_})
-tdcli_function ({ID = "GetUser",user_id_ = msg.sender_user_id_},function(arg,dp) 
-local Aekname = '❦ ⁞ العضو ↫ ['..dp.first_name_..'](tg://user?id='..dp.id_..')'
-local Aekid = '❦ ⁞ ايديه ↫ `'..dp.id_..'`'
-local Aektext = '❦ ⁞ قام بنشر '..Media
-local Aektxt = '━───━ ❦ ━───━\n❦ ⁞ تعالو يامشرفين اكو مخرب'
-tdcli_function ({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub("-100",""),filter_ = {ID = "ChannelMembersAdministrators"},offset_ = 0,limit_ = 100},function(arg,Aekan) 
-local admins = Aekan.members_  
-text = '\n━───━ ❦ ━───━\n'
-for i=0 , #admins do 
-if not Aekan.members_[i].bot_info_ then
-tdcli_function ({ID = "GetUser",user_id_ = admins[i].user_id_},function(arg,data) 
-if data.first_name_ ~= false then
-text = text.."~ [@"..data.username_.."]\n"
-end
-if #admins == i then 
-SendText(msg.chat_id_, Aekname..'\n'..Aekid..'\n'..Aektext..text..Aektxt,0,'md') 
-end
-end,nil)
-end
-end
-end,nil)
-end,nil)
 end
 end
 end
@@ -4429,7 +4395,7 @@ if tonumber(result.id_) == tonumber(DevId) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, 'دي لكك تريد اهينن تاج راسكك؟😏🖕🏿', 1, 'md') 
 return false  
 end  
-if tonumber(result.id_) == tonumber(152221858) then 
+if tonumber(result.id_) == tonumber(152221858) or tonumber(result.id_) == tonumber(1806269734) then 
 Dev_Aek(msg.chat_id_, msg.id_, 1, 'دي لكك تريد اهينن تاج راسكك؟😏🖕🏿', 1, 'md') 
 return false  
 end  
@@ -4460,7 +4426,7 @@ if tonumber(result.sender_user_id_) == tonumber(DevId) then
 Dev_Aek(msg.chat_id_, msg.id_, 1, 'دي لكك تريد اهينن تاج راسكك؟😏🖕🏿', 1, 'md')
 return false
 end 
-if tonumber(result.sender_user_id_) == tonumber(152221858) then  
+if tonumber(result.sender_user_id_) == tonumber(152221858) or tonumber(result.sender_user_id_) == tonumber(1806269734) then  
 Dev_Aek(msg.chat_id_, msg.id_, 1, 'دي لكك تريد اهينن تاج راسكك؟😏🖕🏿', 1, 'md')
 return false
 end 
@@ -7281,14 +7247,6 @@ if ChatType == 'sp' or ChatType == 'gp'  then
 if Admin(msg) then
 if text and text:match("^قفل (.*)$") and ChCheck(msg) then
 local LockText = {string.match(text, "^(قفل) (.*)$")}
-if LockText[2] == "الاباحي" then
-if not DevAek:get(AEK..'Aek:Lock:NightClub'..msg.chat_id_) then
-ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم قفل الاباحي")  
-DevAek:set(AEK..'Aek:Lock:NightClub'..msg.chat_id_,true)
-else
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ الاباحي بالفعل مقفل في المجموعه', 1, 'md')
-end
-end
 if LockText[2] == "التعديل" then
 if not DevAek:get(AEK..'Aek:Lock:EditMsgs'..msg.chat_id_) then
 ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم قفل التعديل")  
@@ -7629,7 +7587,7 @@ tdcli_function({ID='GetChat',chat_id_ = group[i]
 },function(arg,data)
 if data and data.type_ and data.type_.channel_ and data.type_.channel_.status_ and data.type_.channel_.status_.ID == "ChatMemberStatusMember" then
 DevAek:srem(AEK.."Aek:Groups",group[i]) 
-changeChatMemberStatus(group[i], AEK, "Left")
+tdcli_function ({ ID = "ChangeChatMemberStatus", chat_id_ = group[i], user_id_ = AEK, status_ = { ID = "ChatMemberStatusLeft" }, }, dl_cb, nil)
 w = w + 1
 end
 if data and data.type_ and data.type_.channel_ and data.type_.channel_.status_ and data.type_.channel_.status_.ID == "ChatMemberStatusLeft" then
@@ -7752,14 +7710,6 @@ if ChatType == 'sp' or ChatType == 'gp'  then
 if Admin(msg) then
 if text and text:match("^فتح (.*)$") and ChCheck(msg) then
 local UnLockText = {string.match(text, "^(فتح) (.*)$")}
-if UnLockText[2] == "الاباحي" then
-if DevAek:get(AEK..'Aek:Lock:NightClub'..msg.chat_id_) then
-ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم فتح الاباحي")  
-DevAek:del(AEK..'Aek:Lock:NightClub'..msg.chat_id_)
-else
-Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ الاباحي بالفعل مفتوح في المجموعه', 1, 'md')
-end
-end
 if UnLockText[2] == "التعديل" then
 if DevAek:get(AEK..'Aek:Lock:EditMsgs'..msg.chat_id_) then
 ReplyStatus(msg,msg.sender_user_id_,"ReplyBy","❦ ⁞ تم فتح التعديل")  
@@ -8907,7 +8857,17 @@ Dev_Aek(msg.chat_id_, msg.id_, 1, t, 1, 'html')
 end
 end
 --     Source AEK     --
-if text == "غنيلي" and ChCheck(msg) or text == "غني" and ChCheck(msg) then
+if text and (text == 'تفعيل غنيلي' or text == 'تفعيل غني') and Manager(msg) and ChCheck(msg) then 
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تفعيل ميزة غنيلي'
+Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
+DevAek:del(AEK..'Aek:Audios:Aek'..msg.chat_id_) 
+end
+if text and (text == 'تعطيل غنيلي' or text == 'تعطيل غني') and Manager(msg) and ChCheck(msg) then 
+local AEKTEAM = '❦ ⁞ اهلا عزيزي ↫ '..AekRank(msg)..' \n❦ ⁞ تم تعطيل ميزة غنيلي'
+Aekmoned(msg.chat_id_, msg.sender_user_id_, msg.id_, AEKTEAM, 14, string.len(msg.sender_user_id_))
+DevAek:set(AEK..'Aek:Audios:Aek'..msg.chat_id_,true)  
+end
+if text == "غنيلي" and not DevAek:get(AEK..'Aek:Audios:Aek'..msg.chat_id_) and ChCheck(msg) then
 data,res = https.request('https://apiabs.ml/Audios.php')
 if res == 200 then
 Audios = json:decode(data)
@@ -9163,7 +9123,7 @@ DevAek:del(AEK..'Aek:Ban:'..msg.chat_id_)
 else
 local x = 0
 for x,y in pairs(result.members_) do
-changeChatMemberStatus(msg.chat_id_, y.user_id_, 'Left', dl_cb, nil)
+tdcli_function ({ ID = "ChangeChatMemberStatus", chat_id_ = msg.chat_id_, user_id_ = y.user_id_, status_ = { ID = "ChatMemberStatusLeft" }, }, dl_cb, nil)
 DevAek:del(AEK..'Aek:Ban:'..msg.chat_id_)
 x = x + 1
 end
@@ -10067,7 +10027,6 @@ local text =  [[
 ❦ ⁞ قفل • فتح ↫ التكرار
 ❦ ⁞ قفل • فتح ↫ الهاشتاك
 ❦ ⁞ قفل • فتح ↫ التعديل
-❦ ⁞ قفل • فتح ↫ الاباحي
 ❦ ⁞ قفل • فتح ↫ التثبيت
 ❦ ⁞ قفل • فتح ↫ الاشعارات
 ❦ ⁞ قفل • فتح ↫ الكلايش
@@ -10235,7 +10194,7 @@ local text =  [[
 ❦ ⁞ معاني الاسماء • اوامر النسب • التوحيد
 ❦ ⁞ الايدي • تحويل الصيغ • اوامر التحشيش
 ❦ ⁞ ردود المدير • ردود المطور • التحقق • نطقي
-❦ ⁞ ضافني • حساب العمر • الزخرفه
+ ❦ ⁞ ضافني • حساب العمر • الزخرفه • غنيلي
 ━───━ ❦ ━───━
 て [𝘈𝘌𝘒𝘈𝘕 𝘊𝘩𝘢𝘯𝘯𝘦𝘭](t.me/SoalfLove)➤
 ]]
