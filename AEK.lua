@@ -4439,7 +4439,9 @@ end
 getUser(msg.sender_user_id_,get_firstname)
 end   
 --     Source AEK     --
-if text == "اهمس" or text == "همسه" or text == "بوت الهمسه" or text == "اريد بوت الهمسه" or text == "دزلي بوت الهمسه" or text == "دزولي بوت الهمسه" then  Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ @hmosabot', 1, 'md') end
+if text and text == "اهمس" and ChCheck(msg) or text and text == "همسه" and ChCheck(msg) or text and text == "اريد بوت الهمسه" and ChCheck(msg) or text and text == "دزلي بوت الهمسه" and ChCheck(msg) or text and text == "دزولي بوت الهمسه" and ChCheck(msg) then
+Dev_Aek(msg.chat_id_, msg.id_, 1, '❦ ⁞ يمكنك من خلال [@hmosabot] \n❦ ⁞ ارسال همسه سريه للاعضاء \n❦ ⁞ الامر كالاتي مثال :\n❦ ⁞ [@hmosabot] هلو ايكان [@A3kon]', 1, 'md')
+end
 if text == "رابط حذف" or text == "رابط الحذف" or text == "اريد رابط الحذف" or text == "شمرلي رابط الحذف" or text == "اشمرلي رابط الحذف" or text == "اريد رابط حذف" or text == "رابط حذف حسابات" or text == "راح احذف" then local inline = {{{text="اضغط هنا",url="https://my.telegram.org/auth?to=delete"}}} SendInline(msg.chat_id_,'❦ ⁞ اضغط للحصول على الرابط',nil,inline) return false end
 if text == "بوت رنوشه" or text == "اريد بوت رنوشه" or text == "معرف بوت رنوشه" or text == "معرف رنوشه" or text == "بوت ردود" or text == "بوت رنوشة" then local inline = {{{text="اضغط هنا",url="https://t.me/RnoshaBot"}}} SendInline(msg.chat_id_,'❦ ⁞ اضغط للحصول على رنوشه',nil,inline) return false end
 if text == "بوت رتوشه" or text == "اريد بوت رتوشه" or text == "معرف بوت رتوشه" or text == "معرف رتوشه" or text == "بوت الردود" or text == "بوت رتوشة" then local inline = {{{text="اضغط هنا",url="https://t.me/RtoshaBot"}}} SendInline(msg.chat_id_,'❦ ⁞ اضغط للحصول على البوت',nil,inline) return false end
