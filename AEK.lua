@@ -11037,7 +11037,6 @@ tdcli_function ({ID = "GetChannelMembers",channel_id_ = msg.chat_id_:gsub("-100"
 local admins = Aekan.members_  
 text = '\n━───━ ❦ ━───━\n'
 for i=0 , #admins do 
-if not Aekan.members_[i].bot_info_ then
 tdcli_function ({ID = "GetUser",user_id_ = admins[i].user_id_},function(arg,data) 
 if data.first_name_ ~= false then
 text = text.."~ [@"..data.username_.."]\n"
@@ -11046,7 +11045,6 @@ if #admins == i then
 SendText(msg.chat_id_, Aekname..'\n'..Aekid..'\n'..Aektext..text..Aektxt,0,'md') 
 end
 end,nil)
-end
 end
 end,nil)
 end,nil)
