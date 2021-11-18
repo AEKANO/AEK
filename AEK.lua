@@ -836,9 +836,8 @@ else
 return var
 end
 end
-chats = {}
 function tdcli_update_callback(data)
-if (data.ID == "UpdateNewCallbackQuery") then
+elseif (data.ID == "UpdateNewCallbackQuery") then
 local Chat_Id2 = data.chat_id_
 local MsgId2 = data.message_id_
 local DataText = data.payload_.data_
