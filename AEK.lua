@@ -836,6 +836,7 @@ else
 return var
 end
 end
+chats = {}
 function tdcli_update_callback(data)
 if (data.ID == "UpdateNewCallbackQuery") then
 local Chat_Id2 = data.chat_id_
